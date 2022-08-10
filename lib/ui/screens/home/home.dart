@@ -1,13 +1,18 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dogventurehq/constants/colors.dart';
 import 'package:dogventurehq/constants/strings.dart';
+import 'package:dogventurehq/ui/designs/brand_card.dart';
+import 'package:dogventurehq/ui/designs/custom_btn.dart';
 import 'package:dogventurehq/ui/designs/custom_field.dart';
 import 'package:dogventurehq/ui/designs/product_card.dart';
 import 'package:dogventurehq/ui/screens/home/category_icon.dart';
+import 'package:dogventurehq/ui/screens/home/drawer.dart';
+import 'package:dogventurehq/ui/screens/home/logo.dart';
 import 'package:dogventurehq/ui/screens/home/slider.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:dogventurehq/ui/widgets/horizontal_list.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -20,34 +25,36 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int activeBnrIndex = 0;
+  int currentTab = 0;
   final TextEditingController searchCon = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: SizedBox(
-          width: 22.w,
-          height: 20.h,
-          child: Center(
-            child: SvgPicture.asset(
-              'assets/svgs/menu.svg',
+        // Drawer
+        leading: InkWell(
+          onTap: () => _scaffoldKey.currentState!.openDrawer(),
+          child: SizedBox(
+            width: 22.w,
+            height: 20.h,
+            child: Center(
+              child: SvgPicture.asset(
+                'assets/svgs/drawer_menu.svg',
+                color: Colors.black,
+              ),
             ),
           ),
         ),
         centerTitle: true,
-        title: SizedBox(
-          width: 152.w,
-          height: 24.h,
-          child: Center(
-            child: Image.asset(
-              'assets/images/logo.png',
-            ),
-          ),
-        ),
+        // Logo
+        title: const HomeLogo(),
+        // Notification Icon
         actions: [
           Container(
             width: 54.w,
@@ -69,6 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
+      drawer: HomeDrawer(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -132,20 +140,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CategoryIcon(
+                        indexValue: index,
                         onTapFn: () {},
                         categoryName: 'Gadget',
-                        imgUrl: index % 2 != 0
-                            ? 'assets/images/beauty.png'
-                            : 'assets/images/gadget.png',
-                        bgClr: index % 2 != 0 ? ConstantColors.kDED4FC : null,
                       ),
                       CategoryIcon(
+                        indexValue: index,
                         onTapFn: () {},
                         categoryName: 'Beauty',
-                        imgUrl: index % 2 != 0
-                            ? 'assets/images/beauty.png'
-                            : 'assets/images/gadget.png',
-                        bgClr: index % 2 != 0 ? ConstantColors.kDED4FC : null,
                       ),
                     ],
                   );
@@ -154,22 +156,34 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             addH(35.h),
             // Deal of the Week
+            HorizontalList(
+              title: 'Deal of the Week',
+              viewAllFn: () {},
+            ),
+            addH(38.h),
+            // Banner
+            Image.asset(
+              'assets/images/banner2.png',
+              height: 180.h,
+            ),
+            addH(40.h),
+            // Flash Deals
             Container(
               width: double.infinity,
-              height: 255.h,
-              margin: EdgeInsets.only(left: 20.w),
+              height: 542.h,
+              padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 20.h),
+              color: ConstantColors.kD4EAFC,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Title
-                  Container(
-                    height: 27.h,
-                    padding: EdgeInsets.only(right: 20.w),
+                  SizedBox(
+                    height: 32.h,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        // Flash Deals Title
                         Text(
-                          'Deal of the Week',
+                          'Flash Deals',
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
@@ -177,37 +191,61 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: Colors.black,
                           ),
                         ),
-                        InkWell(
-                          onTap: () {
-                            //TODO: Go to all deals screen
-                          },
-                          child: Text(
-                            'View All Products',
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: ConstantStrings.kFontFamily,
-                              color: ConstantColors.k2377A6,
-                            ),
+                        // Flash Deals countdown
+                        SizedBox(
+                          width: 160.h,
+                          child: Row(
+                            children: [
+                              Text(
+                                'ends in   ',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: ConstantStrings.kFontFamily,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              CustomBtn(
+                                onPressedFn: () {},
+                                btnTxt: '23:12:58',
+                                txtSize: 12.sp,
+                                btnSize: Size(96.w, 32.h),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  addH(5.h),
+                  addH(15.h),
                   // Products
                   SizedBox(
                     width: double.infinity,
-                    height: 220.h,
+                    height: 455.h,
                     child: ListView.builder(
-                      itemCount: 5,
-                      scrollDirection: Axis.horizontal,
+                      itemCount: 2,
+                      scrollDirection: Axis.vertical,
                       itemBuilder: (BuildContext context, int index) {
-                        return ProductCard(
-                          onTapFn: () {},
-                          imgUrl: 'assets/images/watch.png',
-                          productName: 'Apple Watch Pair of 2',
-                          price: 99.00,
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ProductCard(
+                              onTapFn: () {},
+                              imgUrl: 'assets/images/watch.png',
+                              productName: 'Apple Watch Pair of 2',
+                              price: 99.00,
+                              cardWidth: 185.w,
+                              imgWidth: 174.w,
+                            ),
+                            ProductCard(
+                              onTapFn: () {},
+                              imgUrl: 'assets/images/watch.png',
+                              productName: 'Apple Watch Pair of 2',
+                              price: 99.00,
+                              cardWidth: 185.w,
+                              imgWidth: 174.w,
+                            ),
+                          ],
                         );
                       },
                     ),
@@ -216,6 +254,55 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             addH(35.h),
+            // Shop By Brands
+            Container(
+              width: double.infinity,
+              height: 116.h,
+              margin: EdgeInsets.only(left: 20.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Shop By Brands',
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: ConstantStrings.kFontFamily,
+                      color: Colors.black,
+                    ),
+                  ),
+                  addH(9.h),
+                  // Brands
+                  SizedBox(
+                    width: double.infinity,
+                    height: 62.h,
+                    child: ListView.builder(
+                      itemCount: 5,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        return BrandCard(
+                          onTapFn: () {},
+                          imgUrl: 'assets/images/puma.png',
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            addH(33.h),
+            // Food Essentials
+            HorizontalList(
+              title: 'Food Essentials',
+              viewAllFn: () {},
+            ),
+            addH(34.h),
+            // Recommended for you
+            HorizontalList(
+              title: 'Recommended for you',
+              viewAllFn: () {},
+            ),
+            addH(30.h),
           ],
         ),
       ),
