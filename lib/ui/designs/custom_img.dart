@@ -3,34 +3,34 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomImg extends StatelessWidget {
   final String imgUrl;
-  const CustomImg({
+  BoxFit? imgFit;
+  CustomImg({
     Key? key,
     required this.imgUrl,
+    this.imgFit,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
+    return Image.network(
       imgUrl,
-      // loadingBuilder: (context, child, progress) => progress == null
-      //     ? child
-      //     : Center(
-      //         child: CircularProgressIndicator(
-      //           value: progress.expectedTotalBytes != null
-      //               ? progress.cumulativeBytesLoaded /
-      //                   progress.expectedTotalBytes!
-      //               : null,
-      //         ),
-      //       ),
-      errorBuilder: ((context, error, stackTrace) {
-        return Icon(
-          Icons.image,
-          size: 30.h,
-          color: Colors.grey,
-        );
-      }),
+      loadingBuilder: (context, child, progress) => progress == null
+          ? child
+          : Center(
+              child: CircularProgressIndicator(
+                value: progress.expectedTotalBytes != null
+                    ? progress.cumulativeBytesLoaded /
+                        progress.expectedTotalBytes!
+                    : null,
+              ),
+            ),
+      errorBuilder: (context, error, stackTrace) => Icon(
+        Icons.image,
+        size: 30.h,
+        color: Colors.grey,
+      ),
       width: 348.h,
-      fit: BoxFit.fill,
+      fit: imgFit ?? BoxFit.fill,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:dogventurehq/constants/strings.dart';
+import 'package:dogventurehq/states/controllers/auth_controller.dart';
 import 'package:dogventurehq/ui/designs/custom_btn.dart';
 import 'package:dogventurehq/ui/designs/custom_field.dart';
 import 'package:dogventurehq/ui/designs/custom_header.dart';
@@ -8,7 +9,7 @@ import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 
 class LoginScreen extends StatefulWidget {
   static String routeName = '/login';
@@ -19,6 +20,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final AuthController _authCon = Get.find<AuthController>();
   bool checkFlag = false;
   final TextEditingController emailCon = TextEditingController();
   final TextEditingController passwordCon = TextEditingController();

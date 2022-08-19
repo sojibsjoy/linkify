@@ -1,5 +1,6 @@
 import 'package:dogventurehq/constants/colors.dart';
 import 'package:dogventurehq/constants/strings.dart';
+import 'package:dogventurehq/ui/designs/custom_img.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,6 +9,7 @@ class CategoryIcon extends StatelessWidget {
   final int indexValue;
   final VoidCallback onTapFn;
   final String categoryName;
+  final String categoryImage;
   double? totalWidth;
   double? txtSize;
   FontWeight? txtWeight;
@@ -16,6 +18,7 @@ class CategoryIcon extends StatelessWidget {
     required this.indexValue,
     required this.onTapFn,
     required this.categoryName,
+    required this.categoryImage,
     this.totalWidth,
     this.txtSize,
     this.txtWeight,
@@ -25,6 +28,8 @@ class CategoryIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTapFn,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       child: Column(
         children: [
           SizedBox(
@@ -37,10 +42,9 @@ class CategoryIcon extends StatelessWidget {
                   'assets/svgs/category_bg.svg',
                   color: indexValue % 2 != 0 ? ConstantColors.kDED4FC : null,
                 ),
-                Image.asset(
-                  indexValue % 2 != 0
-                      ? 'assets/images/beauty.png'
-                      : 'assets/images/gadget.png',
+                CustomImg(
+                  imgUrl: categoryImage,
+                  imgFit: BoxFit.contain,
                 ),
               ],
             ),
@@ -52,7 +56,7 @@ class CategoryIcon extends StatelessWidget {
               categoryName,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: txtSize ?? 14.sp,
+                fontSize: txtSize ?? 12.sp,
                 fontFamily: ConstantStrings.kFontFamily,
                 fontWeight: txtWeight ?? FontWeight.w600,
               ),

@@ -1,14 +1,29 @@
-import 'package:dogventurehq/constants/strings.dart';
 import 'package:dogventurehq/ui/designs/custom_btn.dart';
+import 'package:dogventurehq/ui/designs/custom_title.dart';
 import 'package:dogventurehq/ui/designs/product_card.dart';
+import 'package:dogventurehq/ui/screens/products/filter_dialog.dart';
+import 'package:dogventurehq/ui/screens/products/sortby_dialog.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
-class ProductsScreen extends StatelessWidget {
+class ProductsScreen extends StatefulWidget {
   static String routeName = '/products';
   const ProductsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ProductsScreen> createState() => _ProductsScreenState();
+}
+
+class _ProductsScreenState extends State<ProductsScreen> {
+  String screenTitle = 'Products';
+
+  @override
+  void initState() {
+    screenTitle = Get.arguments as String;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,38 +31,17 @@ class ProductsScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            addH(65.h),
-            // Title
-            Row(
-              children: [
-                addW(20.w),
-                SizedBox(
-                  width: 28.w,
-                  height: 28.h,
-                  child: Center(
-                    child: SvgPicture.asset(
-                      'assets/svgs/back.svg',
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-                Text(
-                  'Food Essentials',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontFamily: ConstantStrings.kFontFamily,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ],
+            CustomTitle(
+              title: screenTitle,
             ),
-            addH(37.h),
             // Sort by & Filter
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 CustomBtn(
-                  onPressedFn: () {},
+                  onPressedFn: () => showDialog(
+                    const SortbyDialog(),
+                  ),
                   btnTxt: 'Sort by',
                   txtSize: 15.sp,
                   txtWeight: FontWeight.w600,
@@ -57,7 +51,9 @@ class ProductsScreen extends StatelessWidget {
                   btnIcon: 'assets/svgs/sort.svg',
                 ),
                 CustomBtn(
-                  onPressedFn: () {},
+                  onPressedFn: () => showDialog(
+                    const FilterDialog(),
+                  ),
                   btnTxt: 'Filter',
                   txtSize: 15.sp,
                   txtWeight: FontWeight.w600,
@@ -96,6 +92,26 @@ class ProductsScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void showDialog(Widget showDialog) {
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.8),
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, anim1, anim2) {
+        return showDialog;
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position: Tween(
+            begin: const Offset(0, 1),
+            end: const Offset(0, 0),
+          ).animate(anim1),
+          child: child,
+        );
+      },
     );
   }
 }

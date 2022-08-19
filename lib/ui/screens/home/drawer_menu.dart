@@ -17,14 +17,22 @@ class DrawerMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       onTap: onTapFn,
       child: Padding(
         padding: EdgeInsets.only(left: 20.w, bottom: 20.h),
         child: Row(
           children: [
-            SvgPicture.asset(
-              icon,
-              color: Colors.black,
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: Center(
+                child: SvgPicture.asset(
+                  icon,
+                  color: Colors.black,
+                ),
+              ),
             ),
             addW(10.w),
             Text(

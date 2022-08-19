@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:dogventurehq/constants/strings.dart';
 
@@ -6,7 +8,8 @@ class BaseClient {
     print(ConstantStrings.kBaseUrl + api);
     try {
       var response = await Dio().get(ConstantStrings.kBaseUrl + api);
-      print('Base Client: ${response.statusCode}');
+      print(ConstantStrings.kBaseUrl + api);
+      print('GET Method: ${response.statusCode}');
       print(response.data);
       return response.data;
     } catch (e) {
@@ -14,13 +17,19 @@ class BaseClient {
     }
   }
 
-  static Future<dynamic> postData(
-      {required String api, required dynamic body}) async {
+  static Future<dynamic> postData({
+    required String api,
+    required dynamic body,
+  }) async {
+    print(ConstantStrings.kBaseUrl + api);
+    log("Post Body: $body");
     try {
       var response = await Dio().post(
         ConstantStrings.kBaseUrl + api,
         data: body,
       );
+      print(ConstantStrings.kBaseUrl + api);
+      print('POST Method: ${response.statusCode}');
       return response.data;
     } catch (e) {
       print(e);

@@ -5,17 +5,18 @@ import 'package:flutter_svg/svg.dart';
 
 class CustomField extends StatefulWidget {
   final TextEditingController textCon;
-  final String prefixIcon;
+  String? prefixIcon;
   final String hintText;
   bool? isPassField;
   TextInputType? inputType;
   double? width, height;
   FontWeight? txtFontWeight;
   Color? fillClr;
+  Color? brdrClr;
   CustomField({
     Key? key,
     required this.textCon,
-    required this.prefixIcon,
+    this.prefixIcon,
     required this.hintText,
     this.isPassField,
     this.inputType,
@@ -23,6 +24,7 @@ class CustomField extends StatefulWidget {
     this.height,
     this.txtFontWeight,
     this.fillClr,
+    this.brdrClr,
   }) : super(key: key);
 
   @override
@@ -52,37 +54,21 @@ class _CustomFieldState extends State<CustomField> {
           filled: widget.fillClr != null,
           fillColor: widget.fillClr,
           contentPadding: EdgeInsets.zero,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5.0),
-            borderSide: BorderSide(
-              color: Colors.grey.shade300,
-              width: 1,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5.0),
-            borderSide: BorderSide(
-              color: Colors.grey.shade300,
-              width: 1,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5.0),
-            borderSide: BorderSide(
-              color: Colors.grey.shade300,
-              width: 1,
-            ),
-          ),
-          prefixIcon: SizedBox(
-            width: 20.w,
-            height: 20.h,
-            child: Center(
-              child: SvgPicture.asset(
-                widget.prefixIcon,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+          border: getInputBorder(),
+          enabledBorder: getInputBorder(),
+          focusedBorder: getInputBorder(),
+          prefixIcon: widget.prefixIcon != null
+              ? SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      widget.prefixIcon!,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                )
+              : null,
           hintText: widget.hintText,
           hintStyle: TextStyle(
             fontSize: 16.sp,
@@ -102,6 +88,16 @@ class _CustomFieldState extends State<CustomField> {
                 )
               : null,
         ),
+      ),
+    );
+  }
+
+  InputBorder getInputBorder() {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(5.0),
+      borderSide: BorderSide(
+        color: widget.brdrClr ?? Colors.grey.shade300,
+        width: 1,
       ),
     );
   }

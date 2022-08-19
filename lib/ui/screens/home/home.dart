@@ -1,19 +1,24 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dogventurehq/constants/colors.dart';
 import 'package:dogventurehq/constants/strings.dart';
+import 'package:dogventurehq/states/controllers/home.dart';
 import 'package:dogventurehq/ui/designs/brand_card.dart';
 import 'package:dogventurehq/ui/designs/custom_btn.dart';
 import 'package:dogventurehq/ui/designs/custom_field.dart';
 import 'package:dogventurehq/ui/designs/product_card.dart';
+import 'package:dogventurehq/ui/screens/cart/cart.dart';
 import 'package:dogventurehq/ui/screens/home/category_icon.dart';
 import 'package:dogventurehq/ui/screens/home/drawer.dart';
 import 'package:dogventurehq/ui/screens/home/logo.dart';
+import 'package:dogventurehq/ui/screens/home/nav_icon.dart';
 import 'package:dogventurehq/ui/screens/home/slider.dart';
+import 'package:dogventurehq/ui/screens/products/products.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:dogventurehq/ui/widgets/horizontal_list.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,10 +30,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final HomeController _homeCon = Get.find();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int activeBnrIndex = 0;
   int currentTab = 0;
   final TextEditingController searchCon = TextEditingController();
+  @override
+  void initState() {
+    _homeCon.getBanners();
+    _homeCon.getCategories();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,25 +107,44 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             addH(28.h),
             // Slider
-            CarouselSlider.builder(
-              options: CarouselOptions(
-                viewportFraction: 0.77,
-                height: 180.h,
-                autoPlay: false,
-                autoPlayInterval: const Duration(seconds: 3),
-                enlargeCenterPage: false,
-                onPageChanged: (index, reason) {
-                  setState(() => activeBnrIndex = index);
-                },
-              ),
-              itemCount: 3,
-              itemBuilder: (context, index, realIndex) {
-                return HomeSlider(
-                  onTapFn: () {},
-                  imgUrl: 'assets/images/banner1.png',
-                );
-              },
+            SizedBox(
+              width: double.infinity,
+              height: 180.h,
+              child: Obx(() {
+                if (_homeCon.bannerLoading.value) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  if (_homeCon.bannerList.isEmpty) {
+                    return const Center(
+                      child: Text('Unable to load banners'),
+                    );
+                  } else {
+                    return CarouselSlider.builder(
+                      options: CarouselOptions(
+                        viewportFraction: 0.77,
+                        height: 180.h,
+                        autoPlay: false,
+                        autoPlayInterval: const Duration(seconds: 3),
+                        enlargeCenterPage: false,
+                        onPageChanged: (index, reason) {
+                          setState(() => activeBnrIndex = index);
+                        },
+                      ),
+                      itemCount: 3,
+                      itemBuilder: (context, index, realIndex) {
+                        return HomeSlider(
+                          onTapFn: () {},
+                          imgUrl: _homeCon.bannerList[index].smallImage,
+                        );
+                      },
+                    );
+                  }
+                }
+              }),
             ),
+            addH(5.h),
             // Indicator
             AnimatedSmoothIndicator(
               activeIndex: activeBnrIndex,
@@ -131,26 +163,41 @@ class _HomeScreenState extends State<HomeScreen> {
             // Categories
             SizedBox(
               width: 395.w,
-              height: 225.h,
-              child: ListView.builder(
-                itemCount: 5,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CategoryIcon(
-                        indexValue: index,
-                        onTapFn: () {},
-                        categoryName: 'Gadget',
-                      ),
-                      CategoryIcon(
-                        indexValue: index,
-                        onTapFn: () {},
-                        categoryName: 'Beauty',
-                      ),
-                    ],
-                  );
+              height: 325.h,
+              child: Obx(
+                () {
+                  if (_homeCon.categoryLoading.value) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    if (_homeCon.categoryList.isEmpty) {
+                      return const Center(
+                        child: Text('Unable to load categories'),
+                      );
+                    } else {
+                      return GridView.builder(
+                        itemCount: _homeCon.categoryList.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 5,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 0.7,
+                        ),
+                        itemBuilder: (_, index) {
+                          return CategoryIcon(
+                            indexValue: index,
+                            onTapFn: () => Get.toNamed(
+                              ProductsScreen.routeName,
+                            ),
+                            categoryName: _homeCon.categoryList[index].name,
+                            categoryImage:
+                                _homeCon.categoryList[index].largeImage,
+                          );
+                        },
+                      );
+                    }
+                  }
                 },
               ),
             ),
@@ -304,6 +351,94 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             addH(30.h),
           ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        width: double.infinity,
+        height: 75.h,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15.w),
+            topRight: Radius.circular(15.w),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              offset: const Offset(0.0, -2.0),
+              blurRadius: 5.w,
+              spreadRadius: 5.w,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            // Home Icon
+            NavIcon(
+              onTapFn: () {},
+              icon: 'assets/svgs/home.svg',
+              title: 'Home',
+            ),
+            // Orders Icon
+            NavIcon(
+              onTapFn: () {},
+              icon: 'assets/svgs/orders.svg',
+              title: 'Orders',
+            ),
+            Container(
+              width: 70.w,
+              height: 75.h,
+              padding: EdgeInsets.only(top: 25.h),
+              child: Center(
+                child: Text(
+                  'Category',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: ConstantStrings.kFontFamily,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ),
+            ),
+            // Cart Icon
+            NavIcon(
+              onTapFn: () => Get.toNamed(CartScreen.routeName),
+              icon: 'assets/svgs/cart.svg',
+              title: 'Cart',
+            ),
+            // Profile Icon
+            NavIcon(
+              onTapFn: () {},
+              icon: 'assets/svgs/profile.svg',
+              title: 'Profile',
+            ),
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Container(
+        width: 60.w,
+        height: 60.h,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          // shadow
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              offset: const Offset(0.0, 2.0),
+              blurRadius: 5.w,
+              spreadRadius: 5.w,
+            ),
+          ],
+        ),
+        child: ClipOval(
+          child: Image.asset(
+            'assets/images/category.png',
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );

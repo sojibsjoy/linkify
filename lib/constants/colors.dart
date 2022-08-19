@@ -6,5 +6,8 @@ class ConstantColors {
   static Color kF7F8FC = const Color(0xFFF7F8FC);
   static Color k2377A6 = const Color(0xFF2377A6);
   static Color kDED4FC = const Color(0xFFDED4FC);
-  static Color kF6F6F6 = const Color(0xFFF6F6F6);
+  static Color kF3F3F3 = const Color(0xFFF3F3F3);
+  static Color k0F98FF = const Color(0xFF0F98FF);
+  static Color k87C1DF = const Color(0xFF87C1DF);
+  static Color k656E72 = const Color(0xFF656E72);
 }

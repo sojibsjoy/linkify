@@ -1,12 +1,13 @@
 import 'package:dogventurehq/constants/colors.dart';
 import 'package:dogventurehq/constants/strings.dart';
+import 'package:dogventurehq/states/controllers/home.dart';
 import 'package:dogventurehq/ui/designs/custom_field.dart';
 import 'package:dogventurehq/ui/screens/home/category_icon.dart';
 import 'package:dogventurehq/ui/screens/products/products.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 
 class CategoriesScreen extends StatefulWidget {
   static String routeName = '/categories';
@@ -17,8 +18,10 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
-  int _selectedCategory = 3;
+  final HomeController _homeCon = Get.find<HomeController>();
+  int _selectedCategory = 0;
   final TextEditingController _searchCon = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,11 +67,15 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       color: ConstantColors.kF7F8FC,
                     ),
                     child: ListView.builder(
-                      itemCount: 12,
+                      itemCount: _homeCon.categoryList.length,
                       itemBuilder: (BuildContext context, int index) {
                         return InkWell(
-                          onTap: () =>
-                              setState(() => _selectedCategory = index),
+                          onTap: () => setState(() {
+                            _selectedCategory = index;
+                            _homeCon.getSubCategories(
+                              _homeCon.categoryList[index].categoryId,
+                            );
+                          }),
                           child: ClipPath(
                             clipper: ShapeBorderClipper(
                               shape: RoundedRectangleBorder(
@@ -117,7 +124,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               ),
                               child: Center(
                                 child: Text(
-                                  'Category Number $index',
+                                  _homeCon.categoryList[index].name,
                                   textAlign: TextAlign.center,
                                   maxLines: 2,
                                   style: TextStyle(
@@ -142,7 +149,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     children: [
                       // Sub Category Title
                       Text(
-                        'Kitchen Appliances',
+                        _homeCon.categoryList[_selectedCategory].name,
                         style: TextStyle(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
@@ -155,27 +162,57 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       SizedBox(
                         width: 295.w,
                         height: 320.h,
-                        child: GridView.builder(
-                          itemCount: 7,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 12,
-                            childAspectRatio: 0.95,
-                          ),
-                          itemBuilder: (_, index) {
-                            return CategoryIcon(
-                              indexValue: index,
-                              onTapFn: () =>
-                                  Get.toNamed(ProductsScreen.routeName),
-                              categoryName: 'Microware',
-                              totalWidth: 60.w,
-                              txtSize: 12.sp,
-                              txtWeight: FontWeight.w500,
-                            );
+                        child: Obx(
+                          () {
+                            if (_homeCon.subCategoryLoading.value) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              if (_homeCon.subCategoryList.isEmpty) {
+                                return Center(
+                                  child: Text(
+                                    'No sub categories found',
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontFamily: ConstantStrings.kFontFamily,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return GridView.builder(
+                                  itemCount: _homeCon.subCategoryList.length,
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 12,
+                                    childAspectRatio: 0.95,
+                                  ),
+                                  itemBuilder: (_, index) {
+                                    return CategoryIcon(
+                                      indexValue: index,
+                                      onTapFn: () => Get.toNamed(
+                                        ProductsScreen.routeName,
+                                        arguments: _homeCon
+                                            .subCategoryList[_selectedCategory]
+                                            .name,
+                                      ),
+                                      categoryName:
+                                          _homeCon.subCategoryList[index].name,
+                                      categoryImage: _homeCon
+                                          .subCategoryList[index].largeImage,
+                                      totalWidth: 60.w,
+                                      txtSize: 12.sp,
+                                      txtWeight: FontWeight.w500,
+                                    );
+                                  },
+                                );
+                              }
+                            }
                           },
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ],

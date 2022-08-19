@@ -1,4 +1,5 @@
 import 'package:dogventurehq/constants/colors.dart';
+import 'package:dogventurehq/ui/screens/address_book/address_book.dart';
 import 'package:dogventurehq/ui/screens/categories/categories.dart';
 import 'package:dogventurehq/ui/screens/home/drawer_menu.dart';
 import 'package:dogventurehq/ui/screens/home/logo.dart';
@@ -41,17 +42,14 @@ class HomeDrawer extends StatelessWidget {
   ];
   final List<VoidCallback> _menuOnTapFns = [
     // section 1
-    () => print('Home'),
+    () => Get.back(),
     () => Get.toNamed(CategoriesScreen.routeName),
-    () => print('Notifications'),
-    () => print('Order History'),
-    () => print('Wishlist'),
     () => print('Notifications'),
     () => print('Order History'),
     () => print('Wishlist'),
     // section 2
     () => print('My Account'),
-    () => print('Address Book'),
+    () => Get.toNamed(AddressBookScreen.routeName),
     () => print('Share'),
     () => print('About Us'),
     () => print('Log Out'),
@@ -91,7 +89,7 @@ class HomeDrawer extends StatelessWidget {
                       addW(30.w),
                       // Menu
                       InkWell(
-                        onTap: () => Scaffold.of(context).closeDrawer(),
+                        onTap: () => Get.back(),
                         child: SizedBox(
                           width: 22.w,
                           height: 20.h,
