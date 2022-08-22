@@ -26,6 +26,8 @@ class CustomTitle extends StatelessWidget {
           children: [
             InkWell(
               onTap: () => Get.back(),
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
               child: SizedBox(
                 width: 28.w,
                 height: 28.h,

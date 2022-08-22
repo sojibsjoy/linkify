@@ -7,6 +7,7 @@ import 'package:dogventurehq/ui/screens/products/products.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class CategoriesScreen extends StatefulWidget {
@@ -23,6 +24,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   final TextEditingController _searchCon = TextEditingController();
 
   @override
+  void initState() {
+    _homeCon.getSubCategories(_homeCon.categoryList[0].categoryId);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -34,6 +41,21 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               Row(
                 children: [
                   addH(80.h),
+                  InkWell(
+                    onTap: () => Get.back(),
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    child: SizedBox(
+                      width: 28.w,
+                      height: 28.h,
+                      child: Center(
+                        child: SvgPicture.asset(
+                          'assets/svgs/back.svg',
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                  ),
                   // Tittle
                   Text(
                     'Categories',
@@ -47,10 +69,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   // Search Box
                   CustomField(
                     textCon: _searchCon,
-                    width: 280.w,
+                    width: 260.w,
                     fillClr: ConstantColors.kF7F8FC,
                     prefixIcon: 'assets/svgs/search.svg',
                     hintText: 'What are you looking for?',
+                    txtSize: 12.sp,
                   ),
                 ],
               ),
@@ -61,7 +84,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   // Parent Category
                   Container(
                     width: 85.w,
-                    height: 770.h,
+                    height: 750.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.w),
                       color: ConstantColors.kF7F8FC,
@@ -161,7 +184,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       // Sub Cateogries
                       SizedBox(
                         width: 295.w,
-                        height: 320.h,
+                        height: 715.h,
                         child: Obx(
                           () {
                             if (_homeCon.subCategoryLoading.value) {
@@ -187,7 +210,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                       const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 3,
                                     crossAxisSpacing: 12,
-                                    childAspectRatio: 0.95,
+                                    childAspectRatio: 0.85,
                                   ),
                                   itemBuilder: (_, index) {
                                     return CategoryIcon(
@@ -202,7 +225,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                           _homeCon.subCategoryList[index].name,
                                       categoryImage: _homeCon
                                           .subCategoryList[index].largeImage,
-                                      totalWidth: 60.w,
+                                      totalWidth: 70.w,
                                       txtSize: 12.sp,
                                       txtWeight: FontWeight.w500,
                                     );

@@ -212,6 +212,12 @@
       "languageVersion": "2.16"
     },
     {
+      "name": "pin_code_fields",
+      "rootUri": "file:///Users/sojib/src/flutter/.pub-cache/hosted/pub.dartlang.org/pin_code_fields-7.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "platform",
       "rootUri": "file:///Users/sojib/src/flutter/.pub-cache/hosted/pub.dartlang.org/platform-3.1.0",
       "packageUri": "lib/",
@@ -314,7 +320,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-08-11T05:07:37.489812Z",
+  "generated": "2022-08-22T11:14:54.116470Z",
   "generator": "pub",
   "generatorVersion": "2.17.6"
 }

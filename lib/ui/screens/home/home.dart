@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dogventurehq/constants/colors.dart';
 import 'package:dogventurehq/constants/strings.dart';
 import 'package:dogventurehq/states/controllers/home.dart';
+import 'package:dogventurehq/states/data/prefs.dart';
 import 'package:dogventurehq/ui/designs/brand_card.dart';
 import 'package:dogventurehq/ui/designs/custom_btn.dart';
 import 'package:dogventurehq/ui/designs/custom_field.dart';
@@ -9,9 +12,12 @@ import 'package:dogventurehq/ui/designs/product_card.dart';
 import 'package:dogventurehq/ui/screens/cart/cart.dart';
 import 'package:dogventurehq/ui/screens/home/category_icon.dart';
 import 'package:dogventurehq/ui/screens/home/drawer.dart';
+import 'package:dogventurehq/ui/screens/home/floating_btn.dart';
 import 'package:dogventurehq/ui/screens/home/logo.dart';
 import 'package:dogventurehq/ui/screens/home/nav_icon.dart';
 import 'package:dogventurehq/ui/screens/home/slider.dart';
+import 'package:dogventurehq/ui/screens/login/login.dart';
+import 'package:dogventurehq/ui/screens/orders/orders.dart';
 import 'package:dogventurehq/ui/screens/products/products.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:dogventurehq/ui/widgets/horizontal_list.dart';
@@ -123,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   } else {
                     return CarouselSlider.builder(
                       options: CarouselOptions(
-                        viewportFraction: 0.77,
+                        viewportFraction: Platform.isAndroid ? 0.77 : 0.87,
                         height: 180.h,
                         autoPlay: false,
                         autoPlayInterval: const Duration(seconds: 3),
@@ -182,13 +188,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 5,
                           crossAxisSpacing: 12,
-                          childAspectRatio: 0.7,
+                          childAspectRatio: 0.65,
                         ),
                         itemBuilder: (_, index) {
                           return CategoryIcon(
                             indexValue: index,
                             onTapFn: () => Get.toNamed(
                               ProductsScreen.routeName,
+                              arguments: _homeCon.categoryList[index].name,
                             ),
                             categoryName: _homeCon.categoryList[index].name,
                             categoryImage:
@@ -240,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         // Flash Deals countdown
                         SizedBox(
-                          width: 160.h,
+                          width: 170.h,
                           child: Row(
                             children: [
                               Text(
@@ -382,10 +389,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             // Orders Icon
             NavIcon(
-              onTapFn: () {},
+              onTapFn: () => Get.toNamed(Orders.routeName),
               icon: 'assets/svgs/orders.svg',
               title: 'Orders',
             ),
+            // Category Icon
             Container(
               width: 70.w,
               height: 75.h,
@@ -410,7 +418,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             // Profile Icon
             NavIcon(
-              onTapFn: () {},
+              onTapFn: () {
+                if (Preference.getLoggedInFlag()) {
+                  // Get.toNamed(ProfileScreen.routeName);
+                } else {
+                  Get.toNamed(LoginScreen.routeName);
+                }
+              },
               icon: 'assets/svgs/profile.svg',
               title: 'Profile',
             ),
@@ -418,29 +432,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        width: 60.w,
-        height: 60.h,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          // shadow
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              offset: const Offset(0.0, 2.0),
-              blurRadius: 5.w,
-              spreadRadius: 5.w,
-            ),
-          ],
-        ),
-        child: ClipOval(
-          child: Image.asset(
-            'assets/images/category.png',
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
+      floatingActionButton: const FloatingBtn(),
     );
   }
 }

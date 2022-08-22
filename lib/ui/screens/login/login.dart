@@ -1,8 +1,9 @@
 import 'package:dogventurehq/constants/strings.dart';
-import 'package:dogventurehq/states/controllers/auth_controller.dart';
+import 'package:dogventurehq/states/controllers/auth.dart';
 import 'package:dogventurehq/ui/designs/custom_btn.dart';
 import 'package:dogventurehq/ui/designs/custom_field.dart';
 import 'package:dogventurehq/ui/designs/custom_header.dart';
+import 'package:dogventurehq/ui/screens/forgot_password/forgot_password.dart';
 import 'package:dogventurehq/ui/screens/home/home.dart';
 import 'package:dogventurehq/ui/screens/register/register.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
@@ -28,115 +29,118 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          // Login Header
-          const CustomHeader(
-            title: 'Hello Again!',
-            subtitle: 'Welcome Back',
-          ),
-          // Email Field
-          CustomField(
-            textCon: emailCon,
-            prefixIcon: 'assets/svgs/mail.svg',
-            hintText: 'Email',
-            inputType: TextInputType.emailAddress,
-          ),
-          addH(16.h),
-          // Password Field
-          CustomField(
-            textCon: passwordCon,
-            prefixIcon: 'assets/svgs/lock.svg',
-            hintText: 'Password',
-            isPassField: true,
-          ),
-          addH(16.h),
-          // Forgot Password
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: 160.w,
-                  height: 22.h,
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        value: checkFlag,
-                        onChanged: (value) =>
-                            setState(() => checkFlag = value!),
-                        splashRadius: 0,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          side: BorderSide(
-                            color: Colors.grey.shade300,
-                            width: 1,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Login Header
+            const CustomHeader(
+              title: 'Hello Again!',
+              subtitle: 'Welcome Back',
+            ),
+            // Email Field
+            CustomField(
+              textCon: emailCon,
+              prefixIcon: 'assets/svgs/mail.svg',
+              hintText: 'Email',
+              inputType: TextInputType.emailAddress,
+            ),
+            addH(16.h),
+            // Password Field
+            CustomField(
+              textCon: passwordCon,
+              prefixIcon: 'assets/svgs/lock.svg',
+              hintText: 'Password',
+              isPassField: true,
+            ),
+            addH(16.h),
+            // Forgot Password
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 165.w,
+                    height: 22.h,
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          value: checkFlag,
+                          onChanged: (value) =>
+                              setState(() => checkFlag = value!),
+                          splashRadius: 0,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            side: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 1,
+                            ),
                           ),
                         ),
-                      ),
-                      Text(
-                        'Remember Me',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontFamily: ConstantStrings.kFontFamily,
-                          color: Colors.grey.shade600,
+                        Text(
+                          'Remember Me',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontFamily: ConstantStrings.kFontFamily,
+                            color: Colors.grey.shade600,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    // TODO: forgot password
-                  },
-                  child: Text(
-                    'Forgot Password?',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontFamily: ConstantStrings.kFontFamily,
-                      color: Colors.grey.shade600,
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          addH(16.h),
-          // Login Button
-          CustomBtn(
-            onPressedFn: () => Get.toNamed(HomeScreen.routeName),
-            btnTxt: 'Log in',
-          ),
-          const Spacer(),
-          // Sign Up Text
-          RichText(
-            text: TextSpan(
-              text: 'Don\'t have an account? ',
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontFamily: ConstantStrings.kFontFamily,
-                color: Colors.grey.shade600,
-              ),
-              children: [
-                TextSpan(
-                  text: 'Register',
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () => Get.toNamed(RegisterScreen.routeName),
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    fontSize: 14.sp,
-                    fontFamily: ConstantStrings.kFontFamily,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+                  TextButton(
+                    onPressed: () => Get.toNamed(
+                      ForgotPasswordScreen.routeName,
+                    ),
+                    child: Text(
+                      'Forgot Password?',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontFamily: ConstantStrings.kFontFamily,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          addH(35.h),
-        ],
+            addH(16.h),
+            // Login Button
+            CustomBtn(
+              onPressedFn: () => Get.toNamed(HomeScreen.routeName),
+              btnTxt: 'Log in',
+            ),
+            addH(220.h),
+            // Sign Up Text
+            RichText(
+              text: TextSpan(
+                text: 'Don\'t have an account? ',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontFamily: ConstantStrings.kFontFamily,
+                  color: Colors.grey.shade600,
+                ),
+                children: [
+                  TextSpan(
+                    text: 'Register',
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => Get.toNamed(RegisterScreen.routeName),
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontSize: 14.sp,
+                      fontFamily: ConstantStrings.kFontFamily,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            addH(35.h),
+          ],
+        ),
       ),
     );
   }

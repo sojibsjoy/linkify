@@ -29,67 +29,70 @@ class _ProductsScreenState extends State<ProductsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            CustomTitle(
-              title: screenTitle,
-            ),
-            // Sort by & Filter
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                CustomBtn(
-                  onPressedFn: () => showDialog(
-                    const SortbyDialog(),
-                  ),
-                  btnTxt: 'Sort by',
-                  txtSize: 15.sp,
-                  txtWeight: FontWeight.w600,
-                  btnColor: Colors.white,
-                  txtColor: Colors.black,
-                  btnSize: Size(185.w, 45.h),
-                  btnIcon: 'assets/svgs/sort.svg',
-                ),
-                CustomBtn(
-                  onPressedFn: () => showDialog(
-                    const FilterDialog(),
-                  ),
-                  btnTxt: 'Filter',
-                  txtSize: 15.sp,
-                  txtWeight: FontWeight.w600,
-                  btnColor: Colors.white,
-                  txtColor: Colors.black,
-                  btnSize: Size(185.w, 45.h),
-                  btnIcon: 'assets/svgs/filter.svg',
-                ),
-              ],
-            ),
-            addH(17.h),
-            // Products
-            SizedBox(
-              width: double.infinity,
-              height: 690.h,
-              child: GridView.builder(
-                itemCount: 10,
-                // padding: EdgeInsets.symmetric(horizontal: 20.w),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 0.h,
-                  mainAxisSpacing: 10.h,
-                  mainAxisExtent: 220.h,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return ProductCard(
-                    cardWidth: 188.w,
-                    onTapFn: () {},
-                    imgUrl: 'assets/images/watch.png',
-                    productName: 'Whole Wheat Flour',
-                    price: 99.00,
-                  );
-                },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              CustomTitle(
+                title: screenTitle,
               ),
-            ),
-          ],
+              // Sort by & Filter
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CustomBtn(
+                    onPressedFn: () => showDialog(
+                      const SortbyDialog(),
+                    ),
+                    btnTxt: 'Sort by',
+                    txtSize: 15.sp,
+                    txtWeight: FontWeight.w600,
+                    btnColor: Colors.white,
+                    txtColor: Colors.black,
+                    btnSize: Size(185.w, 45.h),
+                    btnIcon: 'assets/svgs/sort.svg',
+                  ),
+                  CustomBtn(
+                    onPressedFn: () => showDialog(
+                      const FilterDialog(),
+                    ),
+                    btnTxt: 'Filter',
+                    txtSize: 15.sp,
+                    txtWeight: FontWeight.w600,
+                    btnColor: Colors.white,
+                    txtColor: Colors.black,
+                    btnSize: Size(185.w, 45.h),
+                    btnIcon: 'assets/svgs/filter.svg',
+                  ),
+                ],
+              ),
+              addH(17.h),
+              // Products
+              Container(
+                width: double.infinity,
+                height: 690.h,
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: GridView.builder(
+                  itemCount: 10,
+                  // padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 0.h,
+                    mainAxisSpacing: 30.h,
+                    mainAxisExtent: 220.h,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return ProductCard(
+                      cardWidth: 188.w,
+                      onTapFn: () {},
+                      imgUrl: 'assets/images/watch.png',
+                      productName: 'Whole Wheat Flour',
+                      price: 99.00,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

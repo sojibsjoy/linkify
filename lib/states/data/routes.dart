@@ -5,11 +5,14 @@ import 'package:dogventurehq/ui/screens/address_book/address_book.dart';
 import 'package:dogventurehq/ui/screens/cart/cart.dart';
 import 'package:dogventurehq/ui/screens/categories/categories.dart';
 import 'package:dogventurehq/ui/screens/checkout/checkout.dart';
+import 'package:dogventurehq/ui/screens/forgot_password/forgot_password.dart';
 import 'package:dogventurehq/ui/screens/home/home.dart';
 import 'package:dogventurehq/ui/screens/login/login.dart';
+import 'package:dogventurehq/ui/screens/orders/orders.dart';
 import 'package:dogventurehq/ui/screens/products/products.dart';
 import 'package:dogventurehq/ui/screens/register/register.dart';
 import 'package:dogventurehq/ui/screens/splash/splash.dart';
+import 'package:dogventurehq/ui/screens/thankyou/thankyou.dart';
 import 'package:get/route_manager.dart';
 
 class AllRoutes {
@@ -56,6 +59,18 @@ class AllRoutes {
     GetPage(
       name: CheckoutScreen.routeName,
       page: () => const CheckoutScreen(),
+    ),
+    GetPage(
+      name: ThankyouScreen.routeName,
+      page: () => const ThankyouScreen(),
+    ),
+    GetPage(
+      name: Orders.routeName,
+      page: () => const Orders(),
+    ),
+    GetPage(
+      name: ForgotPasswordScreen.routeName,
+      page: () => const ForgotPasswordScreen(),
     ),
   ];
 }

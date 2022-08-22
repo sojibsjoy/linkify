@@ -3,10 +3,12 @@ import 'package:dogventurehq/ui/designs/custom_btn.dart';
 import 'package:dogventurehq/ui/designs/custom_title.dart';
 import 'package:dogventurehq/ui/screens/checkout/payment_body.dart';
 import 'package:dogventurehq/ui/screens/checkout/shipping_body.dart';
+import 'package:dogventurehq/ui/screens/thankyou/thankyou.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 class CheckoutScreen extends StatefulWidget {
   static String routeName = '/checkout';
@@ -78,13 +80,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               Center(
                 child: CustomBtn(
                   onPressedFn: showPaymentOptions
-                      ? () {}
+                      ? () => Get.toNamed(ThankyouScreen.routeName)
                       : () => setState(() => showPaymentOptions = true),
                   btnTxt: showPaymentOptions ? 'Checkout' : 'Proceed',
                   btnSize: Size(255.w, 46.h),
                 ),
               ),
-              addH(40.h)
+              addH(35.h)
             ],
           ),
         ),

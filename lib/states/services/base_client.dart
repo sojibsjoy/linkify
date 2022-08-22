@@ -5,15 +5,18 @@ import 'package:dogventurehq/constants/strings.dart';
 
 class BaseClient {
   static Future<dynamic> getData({required String api}) async {
-    print(ConstantStrings.kBaseUrl + api);
+    String url = ConstantStrings.kBaseUrl + ConstantStrings.kAPIVersion + api;
+    print(url);
     try {
-      var response = await Dio().get(ConstantStrings.kBaseUrl + api);
-      print(ConstantStrings.kBaseUrl + api);
+      var response = await Dio().get(
+        ConstantStrings.kBaseUrl + ConstantStrings.kAPIVersion + api,
+      );
+      print(url);
       print('GET Method: ${response.statusCode}');
-      print(response.data);
+      log("GET Response:  ${response.data}");
       return response.data;
     } catch (e) {
-      print(e);
+      print("Error: $e");
     }
   }
 
@@ -21,18 +24,20 @@ class BaseClient {
     required String api,
     required dynamic body,
   }) async {
-    print(ConstantStrings.kBaseUrl + api);
+    String url = ConstantStrings.kBaseUrl + ConstantStrings.kAPIVersion + api;
+    print(url);
     log("Post Body: $body");
     try {
       var response = await Dio().post(
-        ConstantStrings.kBaseUrl + api,
+        ConstantStrings.kBaseUrl + ConstantStrings.kAPIVersion + api,
         data: body,
       );
-      print(ConstantStrings.kBaseUrl + api);
+      print(url);
       print('POST Method: ${response.statusCode}');
+      log("POST Response:  ${response.data}");
       return response.data;
     } catch (e) {
-      print(e);
+      print("Error: $e");
     }
   }
 }
