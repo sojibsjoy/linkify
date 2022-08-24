@@ -19,16 +19,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _emailCon = TextEditingController();
   final TextEditingController _passCon = TextEditingController();
   final TextEditingController _confirmPassCon = TextEditingController();
-  final bool _isSent = false;
-  final bool _isVarified = false;
+  bool _isSent = false;
+  bool _isVarified = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: !_isSent
-              ? !_isVarified
+          child: _isSent
+              ? _isVarified
                   ? getThirdView()
                   : getSecondView()
               : getFirstView(),
@@ -42,7 +42,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       pageTitle: 'Forgot Password',
       icon: 'assets/svgs/lock_color.svg',
       txt: 'Please Enter Your Email Address To\nRecieve a Verification Code',
-      btnFn: () => print(_emailCon.text),
+      btnFn: () => setState(() => _isSent = true),
       btnTxt: 'Send',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +64,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       pageTitle: 'Verify Your Email',
       icon: 'assets/svgs/email.svg',
       txt: 'Please Enter The 4 Digit Code Sent To\n${_emailCon.text}',
-      btnFn: () => print("otpCode"),
+      btnFn: () => setState(() => _isVarified = true),
       btnTxt: 'Verify',
       child: Column(
         children: [

@@ -8,12 +8,14 @@ import 'package:get/route_manager.dart';
 class CustomTitle extends StatelessWidget {
   final String title;
   String? suffixIcon;
+  double? siffixSize;
   VoidCallback? suffixOnTapFn;
   CustomTitle({
     Key? key,
     required this.title,
     this.suffixIcon,
     this.suffixOnTapFn,
+    this.siffixSize,
   }) : super(key: key);
 
   @override
@@ -51,13 +53,15 @@ class CustomTitle extends StatelessWidget {
             if (suffixIcon != null)
               InkWell(
                 onTap: suffixOnTapFn,
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
                 child: SizedBox(
-                  width: 28.w,
-                  height: 28.h,
                   child: Center(
                     child: SvgPicture.asset(
                       suffixIcon!,
                       color: Colors.black,
+                      width: siffixSize ?? 28.w,
+                      height: siffixSize ?? 28.h,
                       fit: BoxFit.fill,
                     ),
                   ),

@@ -7,11 +7,11 @@ import 'package:dogventurehq/constants/colors.dart';
 
 class HorizontalList extends StatelessWidget {
   final String title;
-  final VoidCallback viewAllFn;
+  final VoidCallback viewAllTxtFn;
   const HorizontalList({
     Key? key,
     required this.title,
-    required this.viewAllFn,
+    required this.viewAllTxtFn,
   }) : super(key: key);
 
   @override
@@ -19,7 +19,6 @@ class HorizontalList extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 255.h,
-      margin: EdgeInsets.only(left: 20.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -40,7 +39,7 @@ class HorizontalList extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: viewAllFn,
+                  onTap: viewAllTxtFn,
                   child: Text(
                     'View All Products',
                     style: TextStyle(
@@ -63,12 +62,9 @@ class HorizontalList extends StatelessWidget {
               itemCount: 5,
               scrollDirection: Axis.horizontal,
               itemBuilder: (BuildContext context, int index) {
-                return ProductCard(
-                  onTapFn: () {},
-                  imgUrl: 'assets/images/watch.png',
-                  productName: 'Apple Watch Pair of 2',
-                  price: 99.00,
-                );
+                return Text("data");
+                // return ProductCard(
+                // );
               },
             ),
           ),

@@ -4,7 +4,6 @@ import 'package:dogventurehq/states/services/home.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-  RxBool isLoading = true.obs;
   // banner loading
   RxBool bannerLoading = true.obs;
   // category loading

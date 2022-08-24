@@ -5,10 +5,10 @@ import 'package:dogventurehq/constants/colors.dart';
 import 'package:dogventurehq/constants/strings.dart';
 import 'package:dogventurehq/states/controllers/home.dart';
 import 'package:dogventurehq/states/data/prefs.dart';
+import 'package:dogventurehq/states/models/user.dart';
 import 'package:dogventurehq/ui/designs/brand_card.dart';
 import 'package:dogventurehq/ui/designs/custom_btn.dart';
 import 'package:dogventurehq/ui/designs/custom_field.dart';
-import 'package:dogventurehq/ui/designs/product_card.dart';
 import 'package:dogventurehq/ui/screens/cart/cart.dart';
 import 'package:dogventurehq/ui/screens/home/category_icon.dart';
 import 'package:dogventurehq/ui/screens/home/drawer.dart';
@@ -19,6 +19,7 @@ import 'package:dogventurehq/ui/screens/home/slider.dart';
 import 'package:dogventurehq/ui/screens/login/login.dart';
 import 'package:dogventurehq/ui/screens/orders/orders.dart';
 import 'package:dogventurehq/ui/screens/products/products.dart';
+import 'package:dogventurehq/ui/screens/profile/profile.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:dogventurehq/ui/widgets/horizontal_list.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,8 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
   int activeBnrIndex = 0;
   int currentTab = 0;
   final TextEditingController searchCon = TextEditingController();
+  UserModel? userModel;
   @override
   void initState() {
+    userModel = Preference.getUserDetails();
     _homeCon.getBanners();
     _homeCon.getCategories();
     super.initState();
@@ -95,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      drawer: HomeDrawer(),
+      drawer: HomeDrawer(userDetails: userModel!),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -195,7 +198,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             indexValue: index,
                             onTapFn: () => Get.toNamed(
                               ProductsScreen.routeName,
-                              arguments: _homeCon.categoryList[index].name,
+                              arguments: [
+                                _homeCon.categoryList[index].categoryId,
+                                _homeCon.categoryList[index].name,
+                              ],
                             ),
                             categoryName: _homeCon.categoryList[index].name,
                             categoryImage:
@@ -210,9 +216,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             addH(35.h),
             // Deal of the Week
-            HorizontalList(
-              title: 'Deal of the Week',
-              viewAllFn: () {},
+            Padding(
+              padding: EdgeInsets.only(left: 20.w),
+              child: HorizontalList(
+                title: 'Deal of the Week',
+                viewAllTxtFn: () {},
+              ),
             ),
             addH(38.h),
             // Banner
@@ -282,23 +291,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (BuildContext context, int index) {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ProductCard(
-                              onTapFn: () {},
-                              imgUrl: 'assets/images/watch.png',
-                              productName: 'Apple Watch Pair of 2',
-                              price: 99.00,
-                              cardWidth: 185.w,
-                              imgWidth: 174.w,
-                            ),
-                            ProductCard(
-                              onTapFn: () {},
-                              imgUrl: 'assets/images/watch.png',
-                              productName: 'Apple Watch Pair of 2',
-                              price: 99.00,
-                              cardWidth: 185.w,
-                              imgWidth: 174.w,
-                            ),
+                          children: const [
+                            // ProductCard(
+                            //   cardWidth: 185.w,
+                            //   imgWidth: 174.w,
+                            // ),
+                            // ProductCard(
+                            //   cardWidth: 185.w,
+                            //   imgWidth: 174.w,
+                            // ),
                           ],
                         );
                       },
@@ -346,15 +347,21 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             addH(33.h),
             // Food Essentials
-            HorizontalList(
-              title: 'Food Essentials',
-              viewAllFn: () {},
+            Padding(
+              padding: EdgeInsets.only(left: 20.w),
+              child: HorizontalList(
+                title: 'Food Essentials',
+                viewAllTxtFn: () {},
+              ),
             ),
             addH(34.h),
             // Recommended for you
-            HorizontalList(
-              title: 'Recommended for you',
-              viewAllFn: () {},
+            Padding(
+              padding: EdgeInsets.only(left: 20.w),
+              child: HorizontalList(
+                title: 'Recommended for you',
+                viewAllTxtFn: () {},
+              ),
             ),
             addH(30.h),
           ],
@@ -420,7 +427,7 @@ class _HomeScreenState extends State<HomeScreen> {
             NavIcon(
               onTapFn: () {
                 if (Preference.getLoggedInFlag()) {
-                  // Get.toNamed(ProfileScreen.routeName);
+                  Get.toNamed(ProfileScreen.routeName);
                 } else {
                   Get.toNamed(LoginScreen.routeName);
                 }

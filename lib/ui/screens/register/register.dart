@@ -1,10 +1,11 @@
 import 'package:dogventurehq/constants/strings.dart';
 import 'package:dogventurehq/states/controllers/auth.dart';
-import 'package:dogventurehq/states/models/register.dart';
+import 'package:dogventurehq/states/models/user.dart';
 import 'package:dogventurehq/states/utils/methods.dart';
 import 'package:dogventurehq/ui/designs/custom_btn.dart';
 import 'package:dogventurehq/ui/designs/custom_field.dart';
 import 'package:dogventurehq/ui/designs/custom_header.dart';
+import 'package:dogventurehq/ui/screens/home/home.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -198,7 +199,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         );
                         return;
                       }
-                      RegisterModel registerModel = RegisterModel(
+                      UserModel registerModel = UserModel(
                         customerId: 0,
                         userName: emailCon.text,
                         firstName: fNameCon.text,
@@ -206,7 +207,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         phoneNo: mobileNoCon.text,
                         email: emailCon.text,
                         password: passwordCon.text,
-                        firstLastName: '${fNameCon.text} ${lNameCon.text}',
+                        firstLastName: '',
                       );
                       _authCon.register(registerModel);
                       setState(() => _isRegistering = true);
@@ -224,6 +225,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             } else {
                               _isRegistering = false;
                               if (_authCon.isRegistered.value) {
+                                Future.delayed(
+                                  const Duration(seconds: 2),
+                                  () => Get.toNamed(HomeScreen.routeName),
+                                );
                                 return const Center(
                                   child: Text('Registered Successfully'),
                                 );

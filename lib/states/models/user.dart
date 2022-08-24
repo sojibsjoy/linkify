@@ -1,5 +1,5 @@
-class RegisterModel {
-  RegisterModel({
+class UserModel {
+  UserModel({
     required this.customerId,
     required this.userName,
     required this.firstName,
@@ -18,15 +18,15 @@ class RegisterModel {
   late final String password;
   late final String firstLastName;
 
-  RegisterModel.fromJson(Map<String, dynamic> json) {
-    customerId = json['customerId'];
-    userName = json['userName'];
-    firstName = json['firstName'];
-    lastName = json['lastName'];
-    email = json['email'];
-    phoneNo = json['phoneNo'];
-    password = json['password'];
-    firstLastName = json['firstLastName'];
+  UserModel.fromJson(Map<String, dynamic> json) {
+    customerId = json['customerId'] ?? 0;
+    userName = json['userName'] ?? '';
+    firstName = json['firstName'] ?? '';
+    lastName = json['lastName'] ?? '';
+    email = json['email'] ?? '';
+    phoneNo = json['phoneNo'] ?? '';
+    password = json['password'] ?? '';
+    firstLastName = json['firstLastName'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

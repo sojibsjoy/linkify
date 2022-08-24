@@ -4,15 +4,19 @@ import 'package:dio/dio.dart';
 import 'package:dogventurehq/constants/strings.dart';
 
 class BaseClient {
-  static Future<dynamic> getData({required String api}) async {
+  static Future<dynamic> getData({
+    required String api,
+    dynamic parameter,
+  }) async {
     String url = ConstantStrings.kBaseUrl + ConstantStrings.kAPIVersion + api;
-    print(url);
+    print('Sending request to: $url');
     try {
       var response = await Dio().get(
         ConstantStrings.kBaseUrl + ConstantStrings.kAPIVersion + api,
+        queryParameters: parameter,
       );
-      print(url);
       print('GET Method: ${response.statusCode}');
+      print(url);
       log("GET Response:  ${response.data}");
       return response.data;
     } catch (e) {
@@ -25,15 +29,15 @@ class BaseClient {
     required dynamic body,
   }) async {
     String url = ConstantStrings.kBaseUrl + ConstantStrings.kAPIVersion + api;
-    print(url);
+    print('Sending request to: $url');
     log("Post Body: $body");
     try {
       var response = await Dio().post(
         ConstantStrings.kBaseUrl + ConstantStrings.kAPIVersion + api,
         data: body,
       );
-      print(url);
       print('POST Method: ${response.statusCode}');
+      print(url);
       log("POST Response:  ${response.data}");
       return response.data;
     } catch (e) {

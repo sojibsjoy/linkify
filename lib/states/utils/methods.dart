@@ -24,6 +24,7 @@ class Methods {
       ),
       snackPosition: position ?? SnackPosition.BOTTOM,
       animationDuration: const Duration(milliseconds: 300),
+      margin: const EdgeInsets.only(bottom: 20),
       duration: const Duration(seconds: 2),
     );
   }

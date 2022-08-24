@@ -1,5 +1,6 @@
-import 'package:dogventurehq/states/bindings/auth_binding.dart';
+import 'package:dogventurehq/states/bindings/auth.dart';
 import 'package:dogventurehq/states/bindings/initial.dart';
+import 'package:dogventurehq/states/bindings/products.dart';
 import 'package:dogventurehq/ui/screens/add_address/add_address.dart';
 import 'package:dogventurehq/ui/screens/address_book/address_book.dart';
 import 'package:dogventurehq/ui/screens/cart/cart.dart';
@@ -9,7 +10,9 @@ import 'package:dogventurehq/ui/screens/forgot_password/forgot_password.dart';
 import 'package:dogventurehq/ui/screens/home/home.dart';
 import 'package:dogventurehq/ui/screens/login/login.dart';
 import 'package:dogventurehq/ui/screens/orders/orders.dart';
+import 'package:dogventurehq/ui/screens/product_details/product_details.dart';
 import 'package:dogventurehq/ui/screens/products/products.dart';
+import 'package:dogventurehq/ui/screens/profile/profile.dart';
 import 'package:dogventurehq/ui/screens/register/register.dart';
 import 'package:dogventurehq/ui/screens/splash/splash.dart';
 import 'package:dogventurehq/ui/screens/thankyou/thankyou.dart';
@@ -43,6 +46,7 @@ class AllRoutes {
     GetPage(
       name: ProductsScreen.routeName,
       page: () => const ProductsScreen(),
+      binding: ProductsBinding(),
     ),
     GetPage(
       name: AddressBookScreen.routeName,
@@ -55,6 +59,7 @@ class AllRoutes {
     GetPage(
       name: CartScreen.routeName,
       page: () => const CartScreen(),
+      binding: ProductsBinding(),
     ),
     GetPage(
       name: CheckoutScreen.routeName,
@@ -71,6 +76,15 @@ class AllRoutes {
     GetPage(
       name: ForgotPasswordScreen.routeName,
       page: () => const ForgotPasswordScreen(),
+    ),
+    GetPage(
+      name: ProfileScreen.routeName,
+      page: () => const ProfileScreen(),
+    ),
+    GetPage(
+      name: ProductDetails.routeName,
+      page: () => const ProductDetails(),
+      binding: ProductsBinding(),
     ),
   ];
 }

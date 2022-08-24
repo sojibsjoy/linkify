@@ -77,7 +77,10 @@ class _OrdersState extends State<Orders> {
                 itemCount: 10,
                 itemBuilder: (BuildContext context, int index) {
                   return CustomItem(
-                    onTapFn: () {
+                    imgLink: '',
+                    productName: '',
+                    price: 0.0,
+                    deleteIconFn: () {
                       // TODO: add delete function
                     },
                     child: SizedBox(

@@ -1,8 +1,11 @@
 import 'package:dogventurehq/constants/colors.dart';
+import 'package:dogventurehq/states/data/prefs.dart';
+import 'package:dogventurehq/states/models/user.dart';
 import 'package:dogventurehq/ui/screens/address_book/address_book.dart';
 import 'package:dogventurehq/ui/screens/categories/categories.dart';
 import 'package:dogventurehq/ui/screens/home/drawer_menu.dart';
 import 'package:dogventurehq/ui/screens/home/logo.dart';
+import 'package:dogventurehq/ui/screens/login/login.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +13,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/route_manager.dart';
 
 class HomeDrawer extends StatelessWidget {
-  HomeDrawer({Key? key}) : super(key: key);
+  final UserModel userDetails;
+  HomeDrawer({
+    Key? key,
+    required this.userDetails,
+  }) : super(key: key);
 
   final List<String> _menuIcons = [
     // section 1
@@ -52,7 +59,10 @@ class HomeDrawer extends StatelessWidget {
     () => Get.toNamed(AddressBookScreen.routeName),
     () => print('Share'),
     () => print('About Us'),
-    () => print('Log Out'),
+    () {
+      Get.offAllNamed(LoginScreen.routeName);
+      Preference.clearAll();
+    },
   ];
 
   @override
@@ -190,7 +200,7 @@ class HomeDrawer extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Sharif Rahman',
+                        userDetails.firstLastName,
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
@@ -198,7 +208,7 @@ class HomeDrawer extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'test@royex.net',
+                        userDetails.email,
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: Colors.grey,

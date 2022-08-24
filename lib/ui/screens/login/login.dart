@@ -1,5 +1,6 @@
 import 'package:dogventurehq/constants/strings.dart';
 import 'package:dogventurehq/states/controllers/auth.dart';
+import 'package:dogventurehq/states/utils/methods.dart';
 import 'package:dogventurehq/ui/designs/custom_btn.dart';
 import 'package:dogventurehq/ui/designs/custom_field.dart';
 import 'package:dogventurehq/ui/designs/custom_header.dart';
@@ -22,9 +23,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final AuthController _authCon = Get.find<AuthController>();
-  bool checkFlag = false;
-  final TextEditingController emailCon = TextEditingController();
-  final TextEditingController passwordCon = TextEditingController();
+  final TextEditingController _emailCon = TextEditingController();
+  final TextEditingController _passwordCon = TextEditingController();
+  bool _rememberMe = false;
+  bool _loggingIn = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             // Email Field
             CustomField(
-              textCon: emailCon,
+              textCon: _emailCon,
               prefixIcon: 'assets/svgs/mail.svg',
               hintText: 'Email',
               inputType: TextInputType.emailAddress,
@@ -47,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
             addH(16.h),
             // Password Field
             CustomField(
-              textCon: passwordCon,
+              textCon: _passwordCon,
               prefixIcon: 'assets/svgs/lock.svg',
               hintText: 'Password',
               isPassField: true,
@@ -65,9 +67,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Row(
                       children: [
                         Checkbox(
-                          value: checkFlag,
+                          value: _rememberMe,
                           onChanged: (value) =>
-                              setState(() => checkFlag = value!),
+                              setState(() => _rememberMe = value!),
                           splashRadius: 0,
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
@@ -109,8 +111,61 @@ class _LoginScreenState extends State<LoginScreen> {
             addH(16.h),
             // Login Button
             CustomBtn(
-              onPressedFn: () => Get.toNamed(HomeScreen.routeName),
-              btnTxt: 'Log in',
+              onPressedFn: () {
+                if (_emailCon.text.isEmpty || _passwordCon.text.isEmpty) {
+                  Methods.showSnackbar(msg: 'Please fill all fields');
+                  return;
+                }
+                if (!_emailCon.text.isEmail) {
+                  Methods.showSnackbar(
+                    msg: 'Please enter a valid email',
+                  );
+                  return;
+                }
+                if (_passwordCon.text.length < 6) {
+                  Methods.showSnackbar(
+                    msg: 'Password must be at least 6 characters',
+                  );
+                  return;
+                }
+                setState(() => _loggingIn = true);
+                _authCon.login(
+                  email: _emailCon.text,
+                  password: _passwordCon.text,
+                  rememberMe: _rememberMe,
+                );
+                Get.defaultDialog(
+                  title: 'Logging in...',
+                  content: Obx(
+                    () {
+                      if (_authCon.isLoggingIn.value) {
+                        return SizedBox(
+                          height: 100.h,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      } else {
+                        _loggingIn = false;
+                        if (_authCon.isLoggedIn.value) {
+                          Future.delayed(
+                            const Duration(seconds: 2),
+                            () => Get.toNamed(HomeScreen.routeName),
+                          );
+                          return const Center(
+                            child: Text('Login Successfully'),
+                          );
+                        } else {
+                          return const Center(
+                            child: Text('Something went wrong'),
+                          );
+                        }
+                      }
+                    },
+                  ),
+                );
+              },
+              btnTxt: _loggingIn ? 'Processing...' : 'Log in',
             ),
             addH(220.h),
             // Sign Up Text

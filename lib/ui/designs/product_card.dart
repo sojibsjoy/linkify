@@ -1,24 +1,24 @@
 import 'package:dogventurehq/constants/colors.dart';
+import 'package:dogventurehq/states/models/products.dart';
+import 'package:dogventurehq/ui/designs/custom_img.dart';
 import 'package:dogventurehq/ui/screens/home/build_text.dart';
+import 'package:dogventurehq/ui/screens/product_details/product_details.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ProductCard extends StatefulWidget {
-  final VoidCallback onTapFn;
-  final String imgUrl;
-  final String productName;
-  final double price;
+  final ProductModel pModel;
   double? cardWidth;
+  double? imgHeight;
   double? imgWidth;
   ProductCard({
     Key? key,
-    required this.onTapFn,
-    required this.imgUrl,
-    required this.productName,
-    required this.price,
+    required this.pModel,
     this.cardWidth,
     this.imgWidth,
+    this.imgHeight,
   }) : super(key: key);
 
   @override
@@ -31,44 +31,55 @@ class _ProductCardState extends State<ProductCard> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: widget.cardWidth ?? 160.w,
-      height: 220.h,
+      height: widget.imgHeight ?? 220.h,
       child: Center(
         child: Stack(
           children: [
             // Product Image, Name, Price
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: ConstantColors.kD4EAFC,
-                  width: 1.w,
-                ),
-                borderRadius: BorderRadius.circular(10.r),
+            InkWell(
+              onTap: () => Get.toNamed(
+                ProductDetails.routeName,
+                arguments: widget.pModel,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    widget.imgUrl,
-                    width: widget.imgWidth ?? 154.w,
-                    height: 154.h,
-                    fit: BoxFit.fill,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: ConstantColors.kD4EAFC,
+                    width: 1.w,
                   ),
-                  addH(10.h),
-                  Padding(
-                    padding: EdgeInsets.only(left: 5.w),
-                    child: BuildText(
-                      text: widget.productName,
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomImg(
+                      imgUrl: widget
+                          .pModel.productSubSkuRequestModels[0].smallImage,
+                      imgWidth: widget.imgWidth ?? 154.w,
+                      imgHeight: widget.imgHeight ?? 154.h,
+                      imgFit: BoxFit.fill,
                     ),
-                  ),
-                  addH(5.h),
-                  Padding(
-                    padding: EdgeInsets.only(left: 5.w),
-                    child: BuildText(
-                      text: 'AED ${widget.price}',
-                      txtClr: ConstantColors.k2377A6,
+                    addH(10.h),
+                    Container(
+                      width: widget.imgWidth,
+                      height: 36.w,
+                      padding: EdgeInsets.only(left: 5.w),
+                      child: BuildText(
+                        text: widget.pModel.productName,
+                        maximumLines: 2,
+                      ),
                     ),
-                  ),
-                ],
+                    addH(5.h),
+                    Padding(
+                      padding: EdgeInsets.only(left: 5.w),
+                      child: BuildText(
+                        text:
+                            'AED ${widget.pModel.productSubSkuRequestModels[0].price}',
+                        txtClr: ConstantColors.k2377A6,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             // Favorite Icon

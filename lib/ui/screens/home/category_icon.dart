@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dogventurehq/constants/colors.dart';
 import 'package:dogventurehq/constants/strings.dart';
 import 'package:dogventurehq/ui/designs/custom_img.dart';
@@ -52,8 +53,10 @@ class CategoryIcon extends StatelessWidget {
           SizedBox(
             width: totalWidth ?? 80.w,
             height: 40.h,
-            child: Text(
+            child: AutoSizeText(
               categoryName,
+              maxLines: 1,
+              minFontSize: 10,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: txtSize ?? 12.sp,

@@ -1,3 +1,4 @@
+import 'package:dogventurehq/states/controllers/products.dart';
 import 'package:dogventurehq/ui/designs/custom_btn.dart';
 import 'package:dogventurehq/ui/designs/custom_title.dart';
 import 'package:dogventurehq/ui/designs/product_card.dart';
@@ -17,11 +18,16 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
+  final ProductsController _productsCon = Get.find<ProductsController>();
+  int categoryId = 0;
   String screenTitle = 'Products';
 
   @override
   void initState() {
-    screenTitle = Get.arguments as String;
+    categoryId = Get.arguments[0];
+    print('Category ID: $categoryId');
+    screenTitle = Get.arguments[1];
+    _productsCon.getProducts(categoryId);
     super.initState();
   }
 
@@ -70,27 +76,41 @@ class _ProductsScreenState extends State<ProductsScreen> {
               Container(
                 width: double.infinity,
                 height: 690.h,
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: GridView.builder(
-                  itemCount: 10,
-                  // padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 0.h,
-                    mainAxisSpacing: 30.h,
-                    mainAxisExtent: 220.h,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    return ProductCard(
-                      cardWidth: 188.w,
-                      onTapFn: () {},
-                      imgUrl: 'assets/images/watch.png',
-                      productName: 'Whole Wheat Flour',
-                      price: 99.00,
+                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                child: Obx(() {
+                  if (_productsCon.productsLoading.value) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
                     );
-                  },
-                ),
-              ),
+                  } else {
+                    if (_productsCon.productList.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          'No Data Found!',
+                        ),
+                      );
+                    } else {
+                      return GridView.builder(
+                        itemCount: _productsCon.productList.length,
+                        // padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 0.h,
+                          mainAxisSpacing: 10.h,
+                          mainAxisExtent: 240.h,
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          return ProductCard(
+                            pModel: _productsCon.productList[index],
+                            imgWidth: 185.w,
+                            imgHeight: 155.h,
+                          );
+                        },
+                      );
+                    }
+                  }
+                }),
+              )
             ],
           ),
         ),
