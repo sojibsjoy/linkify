@@ -1,6 +1,5 @@
 import 'package:dogventurehq/constants/colors.dart';
 import 'package:dogventurehq/constants/strings.dart';
-import 'package:dogventurehq/ui/screens/address_book/address_item.dart';
 import 'package:dogventurehq/ui/screens/checkout/custom_checkbox.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,9 +44,9 @@ class _ShippingBodyState extends State<ShippingBody> {
                 child: Stack(
                   alignment: AlignmentDirectional.centerStart,
                   children: [
-                    AddressItem(
-                      suffixText: 'Change',
-                    ),
+                    // AddressItem(
+                    //   suffixText: 'Change',
+                    // ),
                     Container(
                       width: 40.w,
                       height: 40.h,

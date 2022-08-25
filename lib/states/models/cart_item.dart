@@ -57,7 +57,7 @@ class CartItemModel {
         cartId: json["cartId"] ?? 0,
         productMasterId: json["productMasterId"],
         productName: json["productName"] ?? '',
-        // using customer id in tempId while storeing the item
+        // using customer id in tempId while storing the item
         customerId: json["customerId"] ?? int.parse(json["tempId"]),
         tempId: json["tempId"],
         quantity: json["quantity"],

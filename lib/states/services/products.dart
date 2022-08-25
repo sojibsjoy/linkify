@@ -12,14 +12,6 @@ class ProductsService {
     return response;
   }
 
-  static Future<dynamic> addToCart({required dynamic payload}) async {
-    var response = await BaseClient.postData(
-      api: ConstantStrings.kAddToCartAPI,
-      body: payload,
-    );
-    return response;
-  }
-
   static Future<dynamic> getCartItems({required int customerId}) async {
     var parameterData = {
       "customerId": customerId,
@@ -28,6 +20,22 @@ class ProductsService {
     var response = await BaseClient.getData(
       api: ConstantStrings.kCartItemsAPI,
       parameter: parameterData,
+    );
+    return response;
+  }
+
+  static Future<dynamic> addToCart({required dynamic payload}) async {
+    var response = await BaseClient.postData(
+      api: ConstantStrings.kAddToCartAPI,
+      body: payload,
+    );
+    return response;
+  }
+
+  static Future<dynamic> removeFromCart({required dynamic payload}) async {
+    var response = await BaseClient.postData(
+      api: ConstantStrings.kRemoveFromCartAPI,
+      body: payload,
     );
     return response;
   }

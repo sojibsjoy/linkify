@@ -1,3 +1,4 @@
+import 'package:dogventurehq/states/bindings/address.dart';
 import 'package:dogventurehq/states/bindings/auth.dart';
 import 'package:dogventurehq/states/bindings/initial.dart';
 import 'package:dogventurehq/states/bindings/products.dart';
@@ -51,10 +52,12 @@ class AllRoutes {
     GetPage(
       name: AddressBookScreen.routeName,
       page: () => const AddressBookScreen(),
+      binding: AddressBinding(),
     ),
     GetPage(
       name: AddAddress.routeName,
       page: () => const AddAddress(),
+      binding: AddressBinding(),
     ),
     GetPage(
       name: CartScreen.routeName,

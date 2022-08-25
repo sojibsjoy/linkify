@@ -61,7 +61,7 @@ class HomeDrawer extends StatelessWidget {
     () => print('About Us'),
     () {
       Get.offAllNamed(LoginScreen.routeName);
-      Preference.clearAll();
+      Preference.logOut();
     },
   ];
 

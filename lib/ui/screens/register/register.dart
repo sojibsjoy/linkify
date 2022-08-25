@@ -24,12 +24,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final AuthController _authCon = Get.find<AuthController>();
   bool checkFlag = false;
   bool _isRegistering = false;
-  final TextEditingController fNameCon = TextEditingController();
-  final TextEditingController lNameCon = TextEditingController();
-  final TextEditingController mobileNoCon = TextEditingController();
-  final TextEditingController emailCon = TextEditingController();
-  final TextEditingController passwordCon = TextEditingController();
-  final TextEditingController confirmPasswordCon = TextEditingController();
+  final TextEditingController _fNameCon = TextEditingController();
+  final TextEditingController _lNameCon = TextEditingController();
+  final TextEditingController _mobileNoCon = TextEditingController();
+  final TextEditingController _emailCon = TextEditingController();
+  final TextEditingController _passwordCon = TextEditingController();
+  final TextEditingController _confirmPasswordCon = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,13 +51,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     children: [
                       CustomField(
                         width: 187.w,
-                        textCon: fNameCon,
+                        textCon: _fNameCon,
                         prefixIcon: 'assets/svgs/account.svg',
                         hintText: 'First Name',
                       ),
                       CustomField(
                         width: 187.w,
-                        textCon: lNameCon,
+                        textCon: _lNameCon,
                         prefixIcon: 'assets/svgs/account.svg',
                         hintText: 'Last Name',
                       ),
@@ -67,7 +67,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   // Mobile No
                   CustomField(
                     width: 387.w,
-                    textCon: mobileNoCon,
+                    textCon: _mobileNoCon,
                     prefixIcon: 'assets/svgs/phone.svg',
                     hintText: 'Mobile No',
                     inputType: TextInputType.number,
@@ -76,7 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   // Email
                   CustomField(
                     width: 387.w,
-                    textCon: emailCon,
+                    textCon: _emailCon,
                     prefixIcon: 'assets/svgs/mail.svg',
                     hintText: 'Email',
                     inputType: TextInputType.emailAddress,
@@ -85,7 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   // Password
                   CustomField(
                     width: 387.w,
-                    textCon: passwordCon,
+                    textCon: _passwordCon,
                     prefixIcon: 'assets/svgs/lock.svg',
                     hintText: 'Password',
                     isPassField: true,
@@ -94,7 +94,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   // Confirm Password
                   CustomField(
                     width: 387.w,
-                    textCon: confirmPasswordCon,
+                    textCon: _confirmPasswordCon,
                     prefixIcon: 'assets/svgs/lock.svg',
                     hintText: 'Retype Password',
                     isPassField: true,
@@ -174,26 +174,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         );
                         return;
                       }
-                      if (fNameCon.text.isEmpty ||
-                          lNameCon.text.isEmpty ||
-                          mobileNoCon.text.isEmpty ||
-                          emailCon.text.isEmpty ||
-                          passwordCon.text.isEmpty ||
-                          confirmPasswordCon.text.isEmpty) {
+                      if (_fNameCon.text.isEmpty ||
+                          _lNameCon.text.isEmpty ||
+                          _mobileNoCon.text.isEmpty ||
+                          _emailCon.text.isEmpty ||
+                          _passwordCon.text.isEmpty ||
+                          _confirmPasswordCon.text.isEmpty) {
                         Methods.showSnackbar(
-                          msg: 'Please fill all fields',
+                          msg: ConstantStrings.kEmptyFields,
                         );
                         return;
                       }
-
-                      if (passwordCon.text.length < 6 ||
-                          confirmPasswordCon.text.length < 6) {
+                      if (!_emailCon.text.isEmail) {
+                        Methods.showSnackbar(msg: ConstantStrings.kValidEmail);
+                        return;
+                      }
+                      if (_passwordCon.text.length < 6 ||
+                          _confirmPasswordCon.text.length < 6) {
                         Methods.showSnackbar(
-                          msg: 'Password must be at least 6 characters',
+                          msg: ConstantStrings.kPasswordLength,
                         );
                         return;
                       }
-                      if (passwordCon.text != confirmPasswordCon.text) {
+                      if (_passwordCon.text != _confirmPasswordCon.text) {
                         Methods.showSnackbar(
                           msg: 'Passwords do not match',
                         );
@@ -201,12 +204,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       }
                       UserModel registerModel = UserModel(
                         customerId: 0,
-                        userName: emailCon.text,
-                        firstName: fNameCon.text,
-                        lastName: lNameCon.text,
-                        phoneNo: mobileNoCon.text,
-                        email: emailCon.text,
-                        password: passwordCon.text,
+                        userName: _emailCon.text,
+                        firstName: _fNameCon.text,
+                        lastName: _lNameCon.text,
+                        phoneNo: _mobileNoCon.text,
+                        email: _emailCon.text,
+                        password: _passwordCon.text,
                         firstLastName: '',
                       );
                       _authCon.register(registerModel);
@@ -233,8 +236,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   child: Text('Registered Successfully'),
                                 );
                               } else {
-                                return const Center(
-                                  child: Text('Something went wrong'),
+                                return Center(
+                                  child: Text(ConstantStrings.kWentWrong),
                                 );
                               }
                             }

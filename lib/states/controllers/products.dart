@@ -25,6 +25,16 @@ class ProductsController extends GetxController {
     }
   }
 
+  void getCartItems(int customerID) async {
+    cartItemsLoading(true);
+    try {
+      var response = await ProductsService.getCartItems(customerId: customerID);
+      cartItemList.value = cartItemListModelFromJson(jsonEncode(response));
+    } finally {
+      cartItemsLoading(false);
+    }
+  }
+
   Future<bool> addToCart(CartItemModel cModel) async {
     addToCartLoading(true);
     try {
@@ -36,13 +46,15 @@ class ProductsController extends GetxController {
     }
   }
 
-  void getCartItems(int customerID) async {
-    cartItemsLoading(true);
+  Future<bool> removeFromCart(CartItemModel cModel) async {
+    addToCartLoading(true);
     try {
-      var response = await ProductsService.getCartItems(customerId: customerID);
-      cartItemList.value = cartItemListModelFromJson(jsonEncode(response));
+      var response =
+          await ProductsService.removeFromCart(payload: cModel.toJson());
+      carRequestModel = CartItemModel.fromJson(response);
+      return true;
     } finally {
-      cartItemsLoading(false);
+      addToCartLoading(false);
     }
   }
 

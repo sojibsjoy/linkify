@@ -1,5 +1,6 @@
 import 'package:dogventurehq/constants/strings.dart';
 import 'package:dogventurehq/states/controllers/auth.dart';
+import 'package:dogventurehq/states/data/prefs.dart';
 import 'package:dogventurehq/states/utils/methods.dart';
 import 'package:dogventurehq/ui/designs/custom_btn.dart';
 import 'package:dogventurehq/ui/designs/custom_field.dart';
@@ -27,6 +28,17 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordCon = TextEditingController();
   bool _rememberMe = false;
   bool _loggingIn = false;
+
+  @override
+  void initState() {
+    if (Preference.getRememberMeFlag()) {
+      _emailCon.text = Preference.getLoginEmail();
+      _passwordCon.text = Preference.getLoginPass();
+      _rememberMe = true;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,20 +125,27 @@ class _LoginScreenState extends State<LoginScreen> {
             CustomBtn(
               onPressedFn: () {
                 if (_emailCon.text.isEmpty || _passwordCon.text.isEmpty) {
-                  Methods.showSnackbar(msg: 'Please fill all fields');
+                  Methods.showSnackbar(msg: ConstantStrings.kEmptyFields);
                   return;
                 }
                 if (!_emailCon.text.isEmail) {
                   Methods.showSnackbar(
-                    msg: 'Please enter a valid email',
+                    msg: ConstantStrings.kValidEmail,
                   );
                   return;
                 }
                 if (_passwordCon.text.length < 6) {
                   Methods.showSnackbar(
-                    msg: 'Password must be at least 6 characters',
+                    msg: ConstantStrings.kPasswordLength,
                   );
                   return;
+                }
+                if (_rememberMe) {
+                  Preference.setRememberMeFlag(true);
+                  Preference.setLoginEmail(_emailCon.text);
+                  Preference.setLoginPass(_passwordCon.text);
+                } else {
+                  Preference.setRememberMeFlag(false);
                 }
                 setState(() => _loggingIn = true);
                 _authCon.login(
@@ -156,8 +175,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Text('Login Successfully'),
                           );
                         } else {
-                          return const Center(
-                            child: Text('Something went wrong'),
+                          return Center(
+                            child: Text(ConstantStrings.kWentWrong),
                           );
                         }
                       }

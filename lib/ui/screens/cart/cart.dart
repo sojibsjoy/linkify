@@ -39,7 +39,6 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     _subTotal = 0;
-
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -58,7 +57,7 @@ class _CartScreenState extends State<CartScreen> {
                   if (_productsCon.cartItemList.isEmpty) {
                     return Padding(
                       padding: EdgeInsets.only(top: 300.h),
-                      child: const Text('No Data Found!'),
+                      child: Text(ConstantStrings.kNoData),
                     );
                   } else {
                     for (CartItemModel item in _productsCon.cartItemList) {
@@ -101,7 +100,7 @@ class _CartScreenState extends State<CartScreen> {
                                           );
                                         } else {
                                           Future.delayed(
-                                            const Duration(seconds: 2),
+                                            const Duration(seconds: 1),
                                             () {
                                               Get.back();
                                               _productsCon.getCartItems(
@@ -131,6 +130,11 @@ class _CartScreenState extends State<CartScreen> {
                                       () => _productsCon
                                           .cartItemList[index].quantity--,
                                     );
+                                    _productsCon.removeFromCart(
+                                      _getNewCartItem(
+                                        _productsCon.cartItemList[index],
+                                      ),
+                                    );
                                   },
                                   increaseFn: () async {
                                     // CartItemModel cItem =
@@ -143,6 +147,11 @@ class _CartScreenState extends State<CartScreen> {
                                     setState(
                                       () => _productsCon
                                           .cartItemList[index].quantity++,
+                                    );
+                                    _productsCon.addToCart(
+                                      _getNewCartItem(
+                                        _productsCon.cartItemList[index],
+                                      ),
                                     );
                                     // }
                                   },
@@ -257,6 +266,19 @@ class _CartScreenState extends State<CartScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  // generating new Cart Item to send it to the server
+  CartItemModel _getNewCartItem(CartItemModel cItem) {
+    return CartItemModel(
+      productMasterId: cItem.productMasterId,
+      customerId: userModel!.customerId,
+      quantity: 1,
+      unitPrice: cItem.unitPrice,
+      productSubSkuId: cItem.productSubSkuId,
+      supplierId: cItem.supplierId,
+      storeId: cItem.storeId,
     );
   }
 }

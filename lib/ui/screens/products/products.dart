@@ -1,3 +1,4 @@
+import 'package:dogventurehq/constants/strings.dart';
 import 'package:dogventurehq/states/controllers/products.dart';
 import 'package:dogventurehq/ui/designs/custom_btn.dart';
 import 'package:dogventurehq/ui/designs/custom_title.dart';
@@ -84,9 +85,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     );
                   } else {
                     if (_productsCon.productList.isEmpty) {
-                      return const Center(
+                      return  Center(
                         child: Text(
-                          'No Data Found!',
+                          ConstantStrings.kNoData,
                         ),
                       );
                     } else {

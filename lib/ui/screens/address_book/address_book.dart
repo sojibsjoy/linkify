@@ -1,15 +1,34 @@
 import 'package:dogventurehq/constants/colors.dart';
 import 'package:dogventurehq/constants/strings.dart';
+import 'package:dogventurehq/states/controllers/address.dart';
+import 'package:dogventurehq/states/data/prefs.dart';
+import 'package:dogventurehq/states/models/user.dart';
 import 'package:dogventurehq/ui/designs/custom_title.dart';
 import 'package:dogventurehq/ui/screens/add_address/add_address.dart';
 import 'package:dogventurehq/ui/screens/address_book/address_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 
-class AddressBookScreen extends StatelessWidget {
+class AddressBookScreen extends StatefulWidget {
   static String routeName = '/address_book';
   const AddressBookScreen({Key? key}) : super(key: key);
+
+  @override
+  State<AddressBookScreen> createState() => _AddressBookScreenState();
+}
+
+class _AddressBookScreenState extends State<AddressBookScreen> {
+  final AddressController _addressCon = Get.find<AddressController>();
+  UserModel? userModel;
+  @override
+  void initState() {
+    userModel = Preference.getUserDetails();
+    if (userModel != null) {
+      _addressCon.getAddresses(userModel!.customerId);
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,14 +83,30 @@ class AddressBookScreen extends StatelessWidget {
               ],
             ),
             // Address List
-            Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return AddressItem();
-                },
-              ),
-            ),
+            Obx(() {
+              if (_addressCon.addressLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                if (_addressCon.addressList.isEmpty) {
+                  return Center(
+                    child: Text(ConstantStrings.kNoData),
+                  );
+                } else {
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: _addressCon.addressList.length,
+                      itemBuilder: (context, index) {
+                        return AddressItem(
+                          aModel: _addressCon.addressList[index],
+                        );
+                      },
+                    ),
+                  );
+                }
+              }
+            })
           ],
         ),
       ),

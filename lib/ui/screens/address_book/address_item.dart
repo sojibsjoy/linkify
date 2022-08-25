@@ -1,14 +1,19 @@
 import 'package:dogventurehq/constants/colors.dart';
 import 'package:dogventurehq/constants/strings.dart';
+import 'package:dogventurehq/states/models/address.dart';
+import 'package:dogventurehq/ui/screens/add_address/add_address.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 class AddressItem extends StatelessWidget {
+  final AddressModel aModel;
   String? suffixText;
   AddressItem({
     Key? key,
+    required this.aModel,
     this.suffixText,
   }) : super(key: key);
 
@@ -50,7 +55,7 @@ class AddressItem extends StatelessWidget {
                   children: [
                     // Address Title
                     Text(
-                      'Home',
+                      aModel.addressType,
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontFamily: ConstantStrings.kFontFamily,
@@ -64,8 +69,16 @@ class AddressItem extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SvgPicture.asset(
-                            'assets/svgs/edit.svg',
+                          InkWell(
+                            onTap: () => Get.toNamed(
+                              AddAddress.routeName,
+                              arguments: aModel,
+                            ),
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            child: SvgPicture.asset(
+                              'assets/svgs/edit.svg',
+                            ),
                           ),
                           if (suffixText == null)
                             SvgPicture.asset(
@@ -88,7 +101,7 @@ class AddressItem extends StatelessWidget {
               ),
               addH(5.h),
               Text(
-                'Ulaya District, Nairobi, Kenya',
+                "${aModel.buildingName} ${aModel.nearByLocation}",
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 14.sp,
@@ -97,7 +110,7 @@ class AddressItem extends StatelessWidget {
               ),
               addH(5.h),
               Text(
-                'Phone Number: +91 1234567890',
+                'Phone Number: ${aModel.phoneNumber}',
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontFamily: ConstantStrings.kFontFamily,
