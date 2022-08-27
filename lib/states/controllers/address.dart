@@ -13,13 +13,14 @@ class AddressController extends GetxController {
   RxBool stateLoading = false.obs;
   RxBool cityLoading = false.obs;
   RxBool saveAddressLoading = true.obs;
+  RxBool deleteAddressLoading = true.obs;
 
   var addressList = <AddressModel>[].obs;
   var countryList = <CountryModel>[].obs;
   var stateList = <StateModel>[].obs;
   var cityList = <CityModel>[].obs;
 
-  void getAddresses(int customerID) async {
+  void getAddresses({required int customerID}) async {
     addressLoading(true);
     try {
       var response = await AddressService.getAddresses(customerID);
@@ -71,6 +72,15 @@ class AddressController extends GetxController {
       );
     } finally {
       saveAddressLoading(false);
+    }
+  }
+
+  void deleteDeliveryAddress({required int addressID}) async {
+    deleteAddressLoading(true);
+    try {
+      var response = AddressService.deleteAddress(aID: addressID);
+    } finally {
+      deleteAddressLoading(false);
     }
   }
 }

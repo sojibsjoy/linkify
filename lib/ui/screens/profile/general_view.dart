@@ -1,10 +1,15 @@
+import 'package:dogventurehq/states/models/user.dart';
 import 'package:dogventurehq/ui/screens/profile/row_item.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 
 class GeneralView extends StatelessWidget {
-  const GeneralView({Key? key}) : super(key: key);
+  final UserModel uModel;
+  const GeneralView({
+    Key? key,
+    required this.uModel,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,25 +17,25 @@ class GeneralView extends StatelessWidget {
       children: [
         addH(60.h),
         // user information
-        const RowItem(
+        RowItem(
           prefixTxt: 'Full Name',
-          suffixTxt: 'Sherif Rahman',
+          suffixTxt: uModel.firstLastName,
         ),
-        const RowItem(
+        RowItem(
           prefixTxt: 'Email',
-          suffixTxt: 'test@royex.net',
+          suffixTxt: uModel.email,
         ),
-        const RowItem(
+        RowItem(
           prefixTxt: 'Mobile Number',
-          suffixTxt: '+966 01-2050876',
+          suffixTxt: uModel.phoneNo,
         ),
-        const RowItem(
+        RowItem(
           prefixTxt: 'Password',
-          suffixTxt: '**********',
+          suffixTxt: uModel.password,
         ),
         const RowItem(
           prefixTxt: 'Shop Name',
-          suffixTxt: 'Khalid Stores',
+          suffixTxt: 'Not Found!',
         ),
       ],
     );

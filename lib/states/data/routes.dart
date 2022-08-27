@@ -67,6 +67,7 @@ class AllRoutes {
     GetPage(
       name: CheckoutScreen.routeName,
       page: () => const CheckoutScreen(),
+      binding: AddressBinding(),
     ),
     GetPage(
       name: ThankyouScreen.routeName,

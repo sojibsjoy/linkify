@@ -1,9 +1,13 @@
 import 'package:dogventurehq/constants/strings.dart';
+import 'package:dogventurehq/states/controllers/address.dart';
+import 'package:dogventurehq/states/data/prefs.dart';
+import 'package:dogventurehq/states/models/address.dart';
+import 'package:dogventurehq/states/models/cart_item.dart';
+import 'package:dogventurehq/states/models/user.dart';
 import 'package:dogventurehq/ui/designs/custom_btn.dart';
 import 'package:dogventurehq/ui/designs/custom_title.dart';
 import 'package:dogventurehq/ui/screens/checkout/payment_body.dart';
 import 'package:dogventurehq/ui/screens/checkout/shipping_body.dart';
-import 'package:dogventurehq/ui/screens/thankyou/thankyou.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,7 +23,22 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  final AddressController _addressCon = Get.find<AddressController>();
   bool showPaymentOptions = false;
+  List<CartItemModel>? cartItems;
+  AddressModel? _selectedAddress;
+  UserModel? userModel;
+
+  @override
+  void initState() {
+    cartItems = Get.arguments;
+    userModel = Preference.getUserDetails();
+    _addressCon.getAddresses(
+      customerID: userModel!.customerId,
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,13 +93,23 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ],
               ),
               addH(20.h),
-              showPaymentOptions ? const PaymentBody() : const ShippingBody(),
+              showPaymentOptions
+                  ? const PaymentBody()
+                  : ShippingBody(
+                      addressCon: _addressCon,
+                      getSelectedAddress: (AddressModel aModel) => setState(
+                        () => _selectedAddress = aModel,
+                      ),
+                    ),
               const Spacer(),
               // Proceed button
               Center(
                 child: CustomBtn(
                   onPressedFn: showPaymentOptions
-                      ? () => Get.toNamed(ThankyouScreen.routeName)
+                      ? () {
+                          // hit place order here
+                          // Get.toNamed(ThankyouScreen.routeName);
+                        }
                       : () => setState(() => showPaymentOptions = true),
                   btnTxt: showPaymentOptions ? 'Checkout' : 'Proceed',
                   btnSize: Size(255.w, 46.h),

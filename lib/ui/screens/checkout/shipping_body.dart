@@ -1,12 +1,24 @@
 import 'package:dogventurehq/constants/colors.dart';
 import 'package:dogventurehq/constants/strings.dart';
+import 'package:dogventurehq/states/controllers/address.dart';
+import 'package:dogventurehq/states/data/prefs.dart';
+import 'package:dogventurehq/states/models/address.dart';
+import 'package:dogventurehq/states/models/user.dart';
+import 'package:dogventurehq/ui/screens/address_book/address_item.dart';
 import 'package:dogventurehq/ui/screens/checkout/custom_checkbox.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ShippingBody extends StatefulWidget {
-  const ShippingBody({Key? key}) : super(key: key);
+  final AddressController addressCon;
+  final void Function(AddressModel) getSelectedAddress;
+  const ShippingBody({
+    Key? key,
+    required this.addressCon,
+    required this.getSelectedAddress,
+  }) : super(key: key);
 
   @override
   State<ShippingBody> createState() => _ShippingBodyState();
@@ -15,10 +27,18 @@ class ShippingBody extends StatefulWidget {
 class _ShippingBodyState extends State<ShippingBody> {
   bool sameAddressFlag = false;
   bool scheduleFlag = false;
-  int selectedAddress = 0;
+  int selectedAddressIndex = 0;
+  UserModel? uModel;
+  @override
+  void initState() {
+    uModel = Preference.getUserDetails();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Shipping Address
         Text(
@@ -34,38 +54,63 @@ class _ShippingBodyState extends State<ShippingBody> {
         SizedBox(
           width: double.infinity,
           height: 285.h,
-          child: ListView.builder(
-            primary: false,
-            itemCount: 2,
-            itemBuilder: (context, index) {
-              return SizedBox(
-                width: 388.w,
-                height: 110.h,
-                child: Stack(
-                  alignment: AlignmentDirectional.centerStart,
-                  children: [
-                    // AddressItem(
-                    //   suffixText: 'Change',
-                    // ),
-                    Container(
-                      width: 40.w,
-                      height: 40.h,
-                      margin: EdgeInsets.only(bottom: 30.h, left: 5.w),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
-                      child: Checkbox(
-                        value: selectedAddress == index,
-                        onChanged: (value) => setState(
-                          () => selectedAddress = index,
+          child: Obx(
+            () {
+              if (widget.addressCon.addressLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                if (widget.addressCon.addressList.isEmpty) {
+                  return Center(
+                    child: Text(ConstantStrings.kNoData),
+                  );
+                } else {
+                  return ListView.builder(
+                    primary: false,
+                    itemCount: widget.addressCon.addressList.length,
+                    itemBuilder: (context, index) {
+                      return SizedBox(
+                        width: 388.w,
+                        height: 110.h,
+                        child: Stack(
+                          alignment: AlignmentDirectional.centerStart,
+                          children: [
+                            AddressItem(
+                              addressCon: widget.addressCon,
+                              uID: uModel!.customerId,
+                              aModel: widget.addressCon.addressList[index],
+                              suffixText: 'Change',
+                            ),
+                            Container(
+                              width: 40.w,
+                              height: 40.h,
+                              margin: EdgeInsets.only(bottom: 30.h, left: 5.w),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: Checkbox(
+                                value: selectedAddressIndex == index,
+                                onChanged: (value) {
+                                  setState(
+                                    () => selectedAddressIndex = index,
+                                  );
+                                  widget.getSelectedAddress(
+                                    widget.addressCon
+                                        .addressList[selectedAddressIndex],
+                                  );
+                                },
+                                shape: const CircleBorder(),
+                              ),
+                            ),
+                          ],
                         ),
-                        shape: const CircleBorder(),
-                      ),
-                    ),
-                  ],
-                ),
-              );
+                      );
+                    },
+                  );
+                }
+              }
             },
           ),
         ),

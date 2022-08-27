@@ -1,5 +1,6 @@
 import 'package:dogventurehq/constants/colors.dart';
 import 'package:dogventurehq/constants/strings.dart';
+import 'package:dogventurehq/states/controllers/address.dart';
 import 'package:dogventurehq/states/models/address.dart';
 import 'package:dogventurehq/ui/screens/add_address/add_address.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
@@ -9,10 +10,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class AddressItem extends StatelessWidget {
+  final AddressController addressCon;
+  final int uID;
   final AddressModel aModel;
   String? suffixText;
   AddressItem({
     Key? key,
+    required this.addressCon,
+    required this.uID,
     required this.aModel,
     this.suffixText,
   }) : super(key: key);
@@ -73,6 +78,11 @@ class AddressItem extends StatelessWidget {
                             onTap: () => Get.toNamed(
                               AddAddress.routeName,
                               arguments: aModel,
+                            )!
+                                .then(
+                              (value) => addressCon.getAddresses(
+                                customerID: uID,
+                              ),
                             ),
                             splashColor: Colors.transparent,
                             highlightColor: Colors.transparent,
@@ -81,8 +91,46 @@ class AddressItem extends StatelessWidget {
                             ),
                           ),
                           if (suffixText == null)
-                            SvgPicture.asset(
-                              'assets/svgs/delete.svg',
+                            InkWell(
+                              onTap: () {
+                                addressCon.deleteDeliveryAddress(
+                                  addressID: aModel.customerAddressId,
+                                );
+                                Get.defaultDialog(
+                                  title: 'Deleting...',
+                                  content: Obx(
+                                    () {
+                                      if (addressCon
+                                          .deleteAddressLoading.value) {
+                                        return SizedBox(
+                                          height: 100.h,
+                                          child: const Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        );
+                                      } else {
+                                        Future.delayed(
+                                          const Duration(seconds: 1),
+                                          () {
+                                            Get.back();
+                                            addressCon.addressList.remove(
+                                              aModel,
+                                            );
+                                          },
+                                        );
+                                        return const Center(
+                                          child: Text(
+                                            'Address Deleted Successfully',
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
+                              child: SvgPicture.asset(
+                                'assets/svgs/delete.svg',
+                              ),
                             ),
                           if (suffixText != null)
                             Text(

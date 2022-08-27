@@ -343,6 +343,10 @@ class _AddAddressState extends State<AddAddress> {
                               );
                             } else {
                               Future.delayed(
+                                const Duration(seconds: 1),
+                                () => Get.back(),
+                              );
+                              Future.delayed(
                                 const Duration(seconds: 2),
                                 () => Get.back(),
                               );

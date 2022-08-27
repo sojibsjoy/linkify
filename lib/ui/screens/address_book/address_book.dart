@@ -25,7 +25,9 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
   void initState() {
     userModel = Preference.getUserDetails();
     if (userModel != null) {
-      _addressCon.getAddresses(userModel!.customerId);
+      _addressCon.getAddresses(
+        customerID: userModel!.customerId,
+      );
     }
     super.initState();
   }
@@ -57,7 +59,11 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
                 ),
                 // Add Address Btn
                 InkWell(
-                  onTap: () => Get.toNamed(AddAddress.routeName),
+                  onTap: () => Get.toNamed(AddAddress.routeName)!.then(
+                    (value) => _addressCon.getAddresses(
+                      customerID: userModel!.customerId,
+                    ),
+                  ),
                   child: Container(
                     width: 135.w,
                     height: 36.h,
@@ -85,23 +91,32 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
             // Address List
             Obx(() {
               if (_addressCon.addressLoading.value) {
-                return const Center(
+                return const Padding(
+                  padding: EdgeInsets.only(top: 300),
                   child: CircularProgressIndicator(),
                 );
               } else {
                 if (_addressCon.addressList.isEmpty) {
-                  return Center(
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 300),
                     child: Text(ConstantStrings.kNoData),
                   );
                 } else {
                   return Expanded(
-                    child: ListView.builder(
-                      itemCount: _addressCon.addressList.length,
-                      itemBuilder: (context, index) {
-                        return AddressItem(
-                          aModel: _addressCon.addressList[index],
-                        );
-                      },
+                    child: RefreshIndicator(
+                      onRefresh: () async => _addressCon.getAddresses(
+                        customerID: userModel!.customerId,
+                      ),
+                      child: ListView.builder(
+                        itemCount: _addressCon.addressList.length,
+                        itemBuilder: (context, index) {
+                          return AddressItem(
+                            addressCon: _addressCon,
+                            uID: userModel!.customerId,
+                            aModel: _addressCon.addressList[index],
+                          );
+                        },
+                      ),
                     ),
                   );
                 }

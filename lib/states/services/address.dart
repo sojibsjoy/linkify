@@ -47,4 +47,14 @@ class AddressService {
     );
     return response;
   }
+
+  static Future<dynamic> deleteAddress({
+    required int aID,
+  }) async {
+    var response = await BaseClient.postData(
+      api: '${ConstantStrings.kDeleteDeliveryAddresstAPI}$aID',
+      body: null,
+    );
+    return response;
+  }
 }

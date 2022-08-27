@@ -1,4 +1,6 @@
 import 'package:dogventurehq/constants/strings.dart';
+import 'package:dogventurehq/states/data/prefs.dart';
+import 'package:dogventurehq/states/models/user.dart';
 import 'package:dogventurehq/ui/designs/custom_title.dart';
 import 'package:dogventurehq/ui/screens/profile/edit_view.dart';
 import 'package:dogventurehq/ui/screens/profile/general_view.dart';
@@ -15,6 +17,14 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _showEditView = false;
+  UserModel? uModel;
+
+  @override
+  void initState() {
+    uModel = Preference.getUserDetails();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 if (!_showEditView)
                   Center(
                     child: Text(
-                      'Sherif Rahman',
+                      uModel!.firstLastName,
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
@@ -67,7 +77,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   ),
-                _showEditView ? const EditView() : const GeneralView(),
+                _showEditView
+                    ? const EditView()
+                    : GeneralView(
+                        uModel: uModel!,
+                      ),
               ],
             ),
           ),
