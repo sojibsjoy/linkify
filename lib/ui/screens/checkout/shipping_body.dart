@@ -7,6 +7,7 @@ import 'package:dogventurehq/states/models/user.dart';
 import 'package:dogventurehq/ui/screens/address_book/address_item.dart';
 import 'package:dogventurehq/ui/screens/checkout/custom_checkbox.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,10 +15,12 @@ import 'package:get/get.dart';
 class ShippingBody extends StatefulWidget {
   final AddressController addressCon;
   final void Function(AddressModel) getSelectedAddress;
+  final void Function(DateTime) scheduleDeliveryFn;
   const ShippingBody({
     Key? key,
     required this.addressCon,
     required this.getSelectedAddress,
+    required this.scheduleDeliveryFn,
   }) : super(key: key);
 
   @override
@@ -25,13 +28,14 @@ class ShippingBody extends StatefulWidget {
 }
 
 class _ShippingBodyState extends State<ShippingBody> {
-  bool sameAddressFlag = false;
-  bool scheduleFlag = false;
-  int selectedAddressIndex = 0;
-  UserModel? uModel;
+  bool _sameAddressFlag = false;
+  bool _scheduleFlag = false;
+  int _selectedAddressIndex = 0;
+  UserModel? _uModel;
+  DateTime _scheduleDate = DateTime.now().add(const Duration(days: 3));
   @override
   void initState() {
-    uModel = Preference.getUserDetails();
+    _uModel = Preference.getUserDetails();
     super.initState();
   }
 
@@ -78,7 +82,7 @@ class _ShippingBodyState extends State<ShippingBody> {
                           children: [
                             AddressItem(
                               addressCon: widget.addressCon,
-                              uID: uModel!.customerId,
+                              uID: _uModel!.customerId,
                               aModel: widget.addressCon.addressList[index],
                               suffixText: 'Change',
                             ),
@@ -91,14 +95,14 @@ class _ShippingBodyState extends State<ShippingBody> {
                                 color: Colors.white,
                               ),
                               child: Checkbox(
-                                value: selectedAddressIndex == index,
+                                value: _selectedAddressIndex == index,
                                 onChanged: (value) {
                                   setState(
-                                    () => selectedAddressIndex = index,
+                                    () => _selectedAddressIndex = index,
                                   );
                                   widget.getSelectedAddress(
                                     widget.addressCon
-                                        .addressList[selectedAddressIndex],
+                                        .addressList[_selectedAddressIndex],
                                   );
                                 },
                                 shape: const CircleBorder(),
@@ -118,8 +122,8 @@ class _ShippingBodyState extends State<ShippingBody> {
         SizedBox(
           height: 60.h,
           child: CustomCheckbox(
-            initialValue: sameAddressFlag,
-            onChangedFn: (value) => setState(() => sameAddressFlag = value!),
+            initialValue: _sameAddressFlag,
+            onChangedFn: (value) => setState(() => _sameAddressFlag = value!),
             title: 'My billing address same as shipping address',
           ),
         ),
@@ -129,8 +133,8 @@ class _ShippingBodyState extends State<ShippingBody> {
         ),
         addH(10.h),
         CustomCheckbox(
-          initialValue: scheduleFlag,
-          onChangedFn: (value) => setState(() => scheduleFlag = value!),
+          initialValue: _scheduleFlag,
+          onChangedFn: (value) => setState(() => _scheduleFlag = value!),
           title: 'I want to schedule my delivery',
         ),
         addH(20.h),
@@ -148,36 +152,59 @@ class _ShippingBodyState extends State<ShippingBody> {
               ),
             ),
             addW(10.w),
-            Container(
-              width: 115.w,
-              height: 35.h,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                border: Border.all(
-                  color: ConstantColors.k06C8FF,
-                  width: 1,
+            InkWell(
+              onTap: _scheduleFlag
+                  ? () => DatePicker.showDatePicker(
+                        context,
+                        showTitleActions: true,
+                        minTime: DateTime.now(),
+                        maxTime: DateTime.now().add(
+                          const Duration(days: 30),
+                        ),
+                        onConfirm: (date) {
+                          setState(() => _scheduleDate = date);
+                          widget.scheduleDeliveryFn(date);
+                        },
+                        currentTime: _scheduleDate,
+                        locale: LocaleType.en,
+                      )
+                  : null,
+              child: Container(
+                width: 115.w,
+                height: 35.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  border: Border.all(
+                    color: _scheduleFlag ? ConstantColors.k06C8FF : Colors.grey,
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(5.w),
                 ),
-                borderRadius: BorderRadius.circular(5.w),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '22-07-2022',
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 14.sp,
-                      fontFamily: ConstantStrings.kFontFamily,
-                      fontWeight: FontWeight.w600,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _scheduleDate
+                          .toIso8601String()
+                          .substring(0, 10)
+                          .split('-')
+                          .reversed
+                          .join('-'),
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 14.sp,
+                        fontFamily: ConstantStrings.kFontFamily,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  addW(5.w),
-                  Icon(
-                    color: Colors.grey.shade700,
-                    Icons.calendar_today_outlined,
-                    size: 15,
-                  ),
-                ],
+                    addW(5.w),
+                    Icon(
+                      color: Colors.grey.shade700,
+                      Icons.calendar_today_outlined,
+                      size: 15,
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

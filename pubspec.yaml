@@ -44,6 +44,7 @@ dependencies:
   pin_code_fields: ^7.4.0
   auto_size_text: ^3.0.0
   flutter_rating_bar: ^4.0.1
+  flutter_datetime_picker: ^1.5.1
 
 dev_dependencies:
   flutter_test:

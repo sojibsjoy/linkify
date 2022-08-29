@@ -1,4 +1,4 @@
-#Fri Aug 26 13:18:27 BDT 2022
+#Mon Aug 29 18:50:45 BDT 2022
 base.0=/Volumes/Data/Works/royex/linkify/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

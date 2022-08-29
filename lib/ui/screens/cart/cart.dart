@@ -250,9 +250,11 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             CustomBtn(
                               onPressedFn: () => Get.toNamed(
-                                CheckoutScreen.routeName,
-                                arguments: _productsCon.cartItemList.value,
-                              ),
+                                  CheckoutScreen.routeName,
+                                  arguments: [
+                                    _productsCon.cartItemList.value,
+                                    _subTotal,
+                                  ]),
                               btnTxt: 'Checkout',
                               btnSize: Size(193.w, 45.h),
                             ),

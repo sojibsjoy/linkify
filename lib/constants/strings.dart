@@ -17,6 +17,7 @@ class ConstantStrings {
   static String kDeliveryAddressesAPI = 'delivery-address';
   static String kUpdateDeliveryAddresstAPI = 'update-delivery-address';
   static String kDeleteDeliveryAddresstAPI = 'delete-delivery-address/';
+  static String kOrderAPI = 'order';
 
   // error msgs
   static String kWentWrong = 'Something went wrong';

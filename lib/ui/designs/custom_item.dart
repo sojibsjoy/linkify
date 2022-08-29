@@ -1,5 +1,6 @@
 import 'package:dogventurehq/constants/colors.dart';
 import 'package:dogventurehq/constants/strings.dart';
+import 'package:dogventurehq/states/models/order_response.dart';
 import 'package:dogventurehq/ui/designs/custom_img.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

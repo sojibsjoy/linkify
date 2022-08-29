@@ -51,11 +51,11 @@ class CategoryIcon extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: totalWidth ?? 80.w,
+            width: totalWidth ?? 85.w,
             height: 40.h,
             child: AutoSizeText(
               categoryName,
-              maxLines: 1,
+              maxLines: 2,
               minFontSize: 10,
               textAlign: TextAlign.center,
               style: TextStyle(

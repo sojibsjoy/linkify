@@ -1,5 +1,6 @@
 import 'package:dogventurehq/states/bindings/address.dart';
 import 'package:dogventurehq/states/bindings/auth.dart';
+import 'package:dogventurehq/states/bindings/order.dart';
 import 'package:dogventurehq/states/bindings/initial.dart';
 import 'package:dogventurehq/states/bindings/products.dart';
 import 'package:dogventurehq/ui/screens/add_address/add_address.dart';
@@ -65,10 +66,12 @@ class AllRoutes {
       binding: ProductsBinding(),
     ),
     GetPage(
-      name: CheckoutScreen.routeName,
-      page: () => const CheckoutScreen(),
-      binding: AddressBinding(),
-    ),
+        name: CheckoutScreen.routeName,
+        page: () => const CheckoutScreen(),
+        bindings: [
+          AddressBinding(),
+          OrderBinding(),
+        ]),
     GetPage(
       name: ThankyouScreen.routeName,
       page: () => const ThankyouScreen(),
@@ -76,6 +79,7 @@ class AllRoutes {
     GetPage(
       name: Orders.routeName,
       page: () => const Orders(),
+      binding: OrderBinding(),
     ),
     GetPage(
       name: ForgotPasswordScreen.routeName,
