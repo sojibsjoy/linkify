@@ -16,7 +16,9 @@ import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AddAddress extends StatefulWidget {
   static String routeName = '/add_address';
@@ -32,6 +34,14 @@ class _AddAddressState extends State<AddAddress> {
   final TextEditingController _phoneNumCon = TextEditingController();
   final TextEditingController _villaCon = TextEditingController();
   final TextEditingController _extraDirectionsCon = TextEditingController();
+
+  late GoogleMapController _googleMapCon;
+  Marker? _selectedLocation;
+
+  CameraPosition _initialCameraPosition = const CameraPosition(
+    target: LatLng(37.773972, -122.431297),
+    zoom: 11.5,
+  );
 
   bool _firstTime = true;
 
@@ -50,9 +60,32 @@ class _AddAddressState extends State<AddAddress> {
       _phoneNumCon.text = aModel!.phoneNumber;
       _villaCon.text = aModel!.buildingName;
       _extraDirectionsCon.text = aModel!.nearByLocation;
+      _initialCameraPosition = CameraPosition(
+        target: LatLng(
+          aModel!.latitude != 0 ? aModel!.latitude : 37.773972,
+          aModel!.longitude != 0 ? aModel!.longitude : -122.431297,
+        ),
+        zoom: 11.5,
+      );
+      _selectedLocation = Marker(
+        markerId: const MarkerId('origin'),
+        infoWindow: const InfoWindow(
+          title: "Current Location",
+        ),
+        position: LatLng(
+          aModel!.latitude != 0 ? aModel!.latitude : 37.773972,
+          aModel!.longitude != 0 ? aModel!.longitude : -122.431297,
+        ),
+      );
     }
     _addressCon.getCountries();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _googleMapCon.dispose();
+    super.dispose();
   }
 
   @override
@@ -255,23 +288,52 @@ class _AddAddressState extends State<AddAddress> {
                     child: Column(
                       children: [
                         // Current Location Button
-                        Container(
-                          height: 60.h,
-                          padding: EdgeInsets.only(top: 15.h, left: 15.w),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/svgs/current_location.svg',
-                              ),
-                              addW(10.w),
-                              Text(
-                                'Current Location',
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontFamily: ConstantStrings.kFontFamily,
+                        InkWell(
+                          onTap: () async {
+                            Position position =
+                                await Methods.determinePosition();
+                            _googleMapCon.animateCamera(
+                              CameraUpdate.newCameraPosition(
+                                CameraPosition(
+                                  zoom: 14,
+                                  target: LatLng(
+                                    position.latitude,
+                                    position.longitude,
+                                  ),
                                 ),
                               ),
-                            ],
+                            );
+                            setState(
+                              () => _selectedLocation = Marker(
+                                markerId: const MarkerId('origin'),
+                                infoWindow: const InfoWindow(
+                                  title: "Current Location",
+                                ),
+                                position: LatLng(
+                                  position.latitude,
+                                  position.longitude,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 60.h,
+                            padding: EdgeInsets.only(top: 15.h, left: 15.w),
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/svgs/current_location.svg',
+                                ),
+                                addW(10.w),
+                                Text(
+                                  'Current Location',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontFamily: ConstantStrings.kFontFamily,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         // Map
@@ -279,12 +341,27 @@ class _AddAddressState extends State<AddAddress> {
                           child: Container(
                             color: Colors.grey,
                             child: Center(
-                              child: Text(
-                                'Map',
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontFamily: ConstantStrings.kFontFamily,
-                                  color: Colors.white,
+                              child: GoogleMap(
+                                myLocationButtonEnabled: false,
+                                zoomControlsEnabled: false,
+                                initialCameraPosition: _initialCameraPosition,
+                                onMapCreated: (controller) =>
+                                    _googleMapCon = controller,
+                                markers: {
+                                  if (_selectedLocation != null)
+                                    _selectedLocation!,
+                                },
+                                onLongPress: (pos) => setState(
+                                  () => _selectedLocation = Marker(
+                                    markerId: const MarkerId('origin'),
+                                    infoWindow: const InfoWindow(
+                                      title: "Selected Location",
+                                    ),
+                                    position: LatLng(
+                                      pos.latitude,
+                                      pos.longitude,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -323,8 +400,12 @@ class _AddAddressState extends State<AddAddress> {
                         cityName: _selectedCity!.cityName,
                         buildingName: _villaCon.text,
                         nearByLocation: _extraDirectionsCon.text,
-                        latitude: 0,
-                        longitude: 0,
+                        latitude: _selectedLocation != null
+                            ? _selectedLocation!.position.latitude
+                            : 0,
+                        longitude: _selectedLocation != null
+                            ? _selectedLocation!.position.longitude
+                            : 0,
                       );
                       _addressCon.saveDeliveryAddress(
                         addressModel: addressModel,

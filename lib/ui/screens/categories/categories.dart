@@ -112,6 +112,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             ),
                             child: Container(
                               height: 70.h,
+                              padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    _selectedCategory == index ? 0.w : 1,
+                              ),
                               decoration: BoxDecoration(
                                 color: _selectedCategory == index
                                     ? Colors.white

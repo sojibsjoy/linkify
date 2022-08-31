@@ -54,7 +54,7 @@ class _ProductCardState extends State<ProductCard> {
                   children: [
                     CustomImg(
                       imgUrl: widget
-                          .pModel.productSubSkuRequestModels[0].smallImage,
+                          .pModel.productSubSkuRequestModels[0].largeImage,
                       imgWidth: widget.imgWidth ?? 154.w,
                       imgHeight: widget.imgHeight ?? 154.h,
                       imgFit: BoxFit.fill,

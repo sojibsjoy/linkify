@@ -165,7 +165,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         );
                       } else {
-                        _loggingIn = false;
+                        Future.delayed(
+                          const Duration(seconds: 1),
+                          () => setState(() => _loggingIn = false),
+                        );
                         if (_authCon.isLoggedIn.value) {
                           Future.delayed(
                             const Duration(seconds: 2),

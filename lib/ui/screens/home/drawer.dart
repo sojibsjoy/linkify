@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dogventurehq/constants/colors.dart';
 import 'package:dogventurehq/states/data/prefs.dart';
 import 'package:dogventurehq/states/models/user.dart';
@@ -6,6 +7,8 @@ import 'package:dogventurehq/ui/screens/categories/categories.dart';
 import 'package:dogventurehq/ui/screens/home/drawer_menu.dart';
 import 'package:dogventurehq/ui/screens/home/logo.dart';
 import 'package:dogventurehq/ui/screens/login/login.dart';
+import 'package:dogventurehq/ui/screens/orders/orders.dart';
+import 'package:dogventurehq/ui/screens/profile/profile.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
@@ -52,17 +55,25 @@ class HomeDrawer extends StatelessWidget {
     () => Get.back(),
     () => Get.toNamed(CategoriesScreen.routeName),
     () => print('Notifications'),
-    () => print('Order History'),
+    () => Get.toNamed(Orders.routeName),
     () => print('Wishlist'),
     // section 2
-    () => print('My Account'),
+    () => Get.toNamed(ProfileScreen.routeName),
     () => Get.toNamed(AddressBookScreen.routeName),
     () => print('Share'),
     () => print('About Us'),
-    () {
-      Get.offAllNamed(LoginScreen.routeName);
-      Preference.logOut();
-    },
+    () => AwesomeDialog(
+          context: Get.context!,
+          dialogType: DialogType.WARNING,
+          animType: AnimType.BOTTOMSLIDE,
+          title: 'Log Out',
+          desc: 'Are you sure want to log out?',
+          btnCancelOnPress: () {},
+          btnOkOnPress: () {
+            Get.offAllNamed(LoginScreen.routeName);
+            Preference.logOut();
+          },
+        ).show(),
   ];
 
   @override

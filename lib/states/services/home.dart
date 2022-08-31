@@ -19,7 +19,7 @@ class HomeService {
   }) async {
     var response = await BaseClient.getData(
       api: subCategoryId != null
-          ? ConstantStrings.kCategoryAPI + subCategoryId
+          ? ConstantStrings.kSubCategoryAPI + subCategoryId
           : ConstantStrings.kCategoryAPI,
     );
     List<CategoryModel> categoryList =

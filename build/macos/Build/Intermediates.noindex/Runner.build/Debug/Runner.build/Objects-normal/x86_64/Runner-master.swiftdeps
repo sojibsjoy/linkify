@@ -1,8 +1,0 @@
-version: "Apple Swift version 5.6.1 (swiftlang-5.6.0.323.66 clang-1316.0.20.12)"
-options: "d587bc40a4a75e5d4ae77b2063253da7ef624d0b6946f6e8c2da19257daccb25"
-build_start_time: [1661159452, 218014001]
-build_end_time: [1661159462, 668210983]
-inputs:
-  "/Volumes/Data/Works/royex/linkify/macos/Flutter/GeneratedPluginRegistrant.swift": [1661159351, 729722499]
-  "/Volumes/Data/Works/royex/linkify/macos/Runner/AppDelegate.swift": [1652970694, 0]
-  "/Volumes/Data/Works/royex/linkify/macos/Runner/MainFlutterWindow.swift": [1652970694, 0]

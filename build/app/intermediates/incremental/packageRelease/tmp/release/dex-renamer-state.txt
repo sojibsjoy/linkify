@@ -1,0 +1,4 @@
+#Wed Aug 31 10:35:07 BDT 2022
+base.0=/Volumes/Data/Works/royex/linkify/build/app/intermediates/dex/release/minifyReleaseWithR8/classes.dex
+renamed.0=classes.dex
+path.0=classes.dex

@@ -18,6 +18,8 @@ class ConstantStrings {
   static String kUpdateDeliveryAddresstAPI = 'update-delivery-address';
   static String kDeleteDeliveryAddresstAPI = 'delete-delivery-address/';
   static String kOrderAPI = 'order';
+  static String kPreviousOrderAPI = 'previous-order';
+  static String kLatestOrderAPI = 'latest-order';
 
   // error msgs
   static String kWentWrong = 'Something went wrong';

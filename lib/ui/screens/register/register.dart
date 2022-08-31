@@ -226,7 +226,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               );
                             } else {
-                              _isRegistering = false;
+                              Future.delayed(
+                                const Duration(seconds: 1),
+                                () => setState(() => _isRegistering = false),
+                              );
                               if (_authCon.isRegistered.value) {
                                 Future.delayed(
                                   const Duration(seconds: 2),

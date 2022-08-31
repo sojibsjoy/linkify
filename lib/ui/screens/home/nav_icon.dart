@@ -18,6 +18,8 @@ class NavIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTapFn,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       child: SizedBox(
         width: 60.w,
         height: 75.h,

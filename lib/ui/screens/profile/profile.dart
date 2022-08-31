@@ -78,7 +78,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 _showEditView
-                    ? const EditView()
+                    ? EditView(
+                        userModel: uModel!,
+                      )
                     : GeneralView(
                         uModel: uModel!,
                       ),

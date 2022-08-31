@@ -1,11 +1,16 @@
 import 'package:dogventurehq/constants/strings.dart';
+import 'package:dogventurehq/states/models/user.dart';
 import 'package:dogventurehq/ui/screens/profile/edit_item.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 
 class EditView extends StatefulWidget {
-  const EditView({Key? key}) : super(key: key);
+  final UserModel userModel;
+  const EditView({
+    Key? key,
+    required this.userModel,
+  }) : super(key: key);
 
   @override
   State<EditView> createState() => _EditViewState();
@@ -18,6 +23,18 @@ class _EditViewState extends State<EditView> {
   final TextEditingController _mobileNoCon = TextEditingController();
   final TextEditingController _passwordCon = TextEditingController();
   final TextEditingController _shopNameCon = TextEditingController();
+
+  @override
+  void initState() {
+    _fNameCon.text = widget.userModel.firstName;
+    _lNameCon.text = widget.userModel.lastName;
+    _emailCon.text = widget.userModel.email;
+    _mobileNoCon.text = widget.userModel.phoneNo;
+    _passwordCon.text = widget.userModel.password;
+    // _shopNameCon.text = widget.userModel.;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(

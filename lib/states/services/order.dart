@@ -2,12 +2,13 @@ import 'package:dogventurehq/constants/strings.dart';
 import 'package:dogventurehq/states/services/base_client.dart';
 
 class OrderService {
-  // Category Function
-  static Future<dynamic> getCurrentOrders(
-    int userId,
-  ) async {
+  // Get Order Function
+  static Future<dynamic> getOrders({
+    required String api,
+    required int userId,
+  }) async {
     var response = await BaseClient.getData(
-      api: ConstantStrings.kOrderAPI,
+      api: api,
       parameter: {
         "userId": userId,
       },

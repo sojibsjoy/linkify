@@ -4,9 +4,8 @@ import 'package:dogventurehq/states/controllers/order.dart';
 import 'package:dogventurehq/states/data/prefs.dart';
 import 'package:dogventurehq/states/models/user.dart';
 import 'package:dogventurehq/ui/designs/custom_btn.dart';
-import 'package:dogventurehq/ui/designs/custom_item.dart';
 import 'package:dogventurehq/ui/designs/custom_title.dart';
-import 'package:dogventurehq/ui/screens/orders/row_text.dart';
+import 'package:dogventurehq/ui/screens/orders/order_list.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +28,12 @@ class _OrdersState extends State<Orders> {
   void initState() {
     userModel = Preference.getUserDetails();
     if (userModel != null) {
-      _orderCon.getCurrentOrders(userID: userModel!.customerId);
+      _orderCon.getOrders(
+        loadingFlag: _orderCon.currentOrderLoading,
+        orderList: _orderCon.currentOrderList,
+        orderApi: ConstantStrings.kOrderAPI,
+        userID: userModel!.customerId,
+      );
     }
     super.initState();
   }
@@ -50,6 +54,14 @@ class _OrdersState extends State<Orders> {
                 CustomBtn(
                   onPressedFn: () {
                     setState(() => _selectedBtnIndex = 0);
+                    if (_orderCon.currentOrderList.isEmpty) {
+                      _orderCon.getOrders(
+                        loadingFlag: _orderCon.currentOrderLoading,
+                        orderList: _orderCon.currentOrderList,
+                        orderApi: ConstantStrings.kOrderAPI,
+                        userID: userModel!.customerId,
+                      );
+                    }
                   },
                   btnTxt: 'Current',
                   btnSize: Size(120.w, 40.h),
@@ -63,6 +75,14 @@ class _OrdersState extends State<Orders> {
                 CustomBtn(
                   onPressedFn: () {
                     setState(() => _selectedBtnIndex = 1);
+                    if (_orderCon.previousOrderList.isEmpty) {
+                      _orderCon.getOrders(
+                        loadingFlag: _orderCon.previousOrderLoading,
+                        orderList: _orderCon.previousOrderList,
+                        orderApi: ConstantStrings.kPreviousOrderAPI,
+                        userID: userModel!.customerId,
+                      );
+                    }
                   },
                   btnTxt: 'Previous',
                   btnSize: Size(120.w, 40.h),
@@ -76,6 +96,14 @@ class _OrdersState extends State<Orders> {
                 CustomBtn(
                   onPressedFn: () {
                     setState(() => _selectedBtnIndex = 2);
+                    if (_orderCon.frequentOrderList.isEmpty) {
+                      _orderCon.getOrders(
+                        loadingFlag: _orderCon.frequentOrderLoading,
+                        orderList: _orderCon.frequentOrderList,
+                        orderApi: ConstantStrings.kLatestOrderAPI,
+                        userID: userModel!.customerId,
+                      );
+                    }
                   },
                   btnTxt: 'Frequent',
                   btnSize: Size(120.w, 40.h),
@@ -89,58 +117,34 @@ class _OrdersState extends State<Orders> {
             ),
             addH(20.h),
             // List of orders
-            Obx(() {
-              if (_orderCon.currentOrderLoading.value) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                if (_orderCon.currentOrderList.isEmpty) {
-                  return Center(
-                    child: Text(ConstantStrings.kNoData),
-                  );
-                } else {
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: _orderCon.currentOrderList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return CustomItem(
-                          imgLink: _orderCon.currentOrderList[index]
-                              .invoiceDetailsViewModels[0].largeImage,
-                          productName: _orderCon.currentOrderList[index]
-                              .invoiceDetailsViewModels[0].productName,
-                          price: _orderCon.currentOrderList[index].totalAmount,
-                          deleteIconFn: () {
-                            // TODO: add delete function
-                          },
-                          child: SizedBox(
-                            width: 265.w,
-                            child: Column(
-                              children: [
-                                const RowText(
-                                  text1: 'Invoice Number',
-                                  text2: 'Expected Delivery',
-                                  isBold: false,
-                                ),
-                                addH(5.h),
-                                const RowText(
-                                  text1: 'ABC123456',
-                                  text2: '22-06-2022',
-                                  isBold: true,
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }
-              }
-            }),
+            getOrderList(),
           ],
         ),
       ),
     );
+  }
+
+  Widget getOrderList() {
+    switch (_selectedBtnIndex) {
+      case 0:
+        return OrderList(
+          loadingFlag: _orderCon.currentOrderLoading,
+          orderList: _orderCon.currentOrderList,
+        );
+      case 1:
+        return OrderList(
+          loadingFlag: _orderCon.previousOrderLoading,
+          orderList: _orderCon.previousOrderList,
+        );
+      case 2:
+        return OrderList(
+          loadingFlag: _orderCon.frequentOrderLoading,
+          orderList: _orderCon.frequentOrderList,
+        );
+      default:
+        return Text(
+          ConstantStrings.kWentWrong,
+        );
+    }
   }
 }
