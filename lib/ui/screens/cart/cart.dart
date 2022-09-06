@@ -103,6 +103,7 @@ class _CartScreenState extends State<CartScreen> {
                                             const Duration(seconds: 1),
                                             () {
                                               Get.back();
+                                              _subTotal = 0;
                                               _productsCon.getCartItems(
                                                 userModel!.customerId,
                                               );
@@ -240,7 +241,7 @@ class _CartScreenState extends State<CartScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             CustomBtn(
-                              onPressedFn: () {},
+                              onPressedFn: () => Get.back(),
                               btnTxt: 'Continue Shopping',
                               btnSize: Size(193.w, 45.h),
                               txtColor: Colors.black,

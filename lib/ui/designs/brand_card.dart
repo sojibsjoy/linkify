@@ -20,7 +20,8 @@ class BrandCard extends StatelessWidget {
         margin: EdgeInsets.only(right: 10.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.w),
-          color: ConstantColors.kF3F3F3,
+          // color: ConstantColors.kF3F3F3,
+          color: Colors.white,
           border: Border.all(
             color: ConstantColors.kD4EAFC,
             width: 1.w,

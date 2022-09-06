@@ -1,6 +1,6 @@
-# dogventurehq
+# Linkify
 
-A new Flutter project.
+A new Flutter project provided by Royex Technologies.
 
 ## Getting Started
 

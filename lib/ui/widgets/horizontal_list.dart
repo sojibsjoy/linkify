@@ -1,15 +1,21 @@
 import 'package:dogventurehq/constants/strings.dart';
+import 'package:dogventurehq/states/models/products.dart';
 import 'package:dogventurehq/ui/designs/product_card.dart';
 import 'package:dogventurehq/ui/widgets/helper_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dogventurehq/constants/colors.dart';
+import 'package:get/state_manager.dart';
 
 class HorizontalList extends StatelessWidget {
+  final RxBool loadingFlag;
+  final RxList productList;
   final String title;
   final VoidCallback viewAllTxtFn;
   const HorizontalList({
     Key? key,
+    required this.loadingFlag,
+    required this.productList,
     required this.title,
     required this.viewAllTxtFn,
   }) : super(key: key);
@@ -18,7 +24,7 @@ class HorizontalList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 255.h,
+      height: 265.h,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -56,18 +62,34 @@ class HorizontalList extends StatelessWidget {
           addH(5.h),
           // Products
           SizedBox(
-            width: double.infinity,
-            height: 220.h,
-            child: ListView.builder(
-              itemCount: 5,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (BuildContext context, int index) {
-                return Text("data");
-                // return ProductCard(
-                // );
-              },
-            ),
-          ),
+              width: double.infinity,
+              height: 230.h,
+              child: Obx(() {
+                if (loadingFlag.value) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  if (productList.isEmpty) {
+                    return Center(
+                      child: Text(ConstantStrings.kNoData),
+                    );
+                  } else {
+                    return ListView.builder(
+                      itemCount: productList.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 15),
+                          child: ProductCard(
+                            pModel: productList[index],
+                          ),
+                        );
+                      },
+                    );
+                  }
+                }
+              })),
         ],
       ),
     );

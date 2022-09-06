@@ -5,6 +5,7 @@ class ConstantStrings {
   static String kCategoryAPI = 'ParentCategory/4';
   static String kSubCategoryAPI = 'Category/4/';
   static String kProductsAPI = 'Products/4/1/13/1';
+  static String kProductDetailsAPI = 'Product-Details';
   static String kRegisterAPI = 'customer-register';
   static String kLoginAPI = 'customer-login';
   static String kCartItemsAPI = 'cart-items';
@@ -30,4 +31,24 @@ class ConstantStrings {
 
   // fonts
   static String kFontFamily = 'Poppins';
+
+  static String kHtmlPrefix = '''
+  <!DOCTYPE html>
+    <html>
+      <head>
+      <style>
+      img{
+        width:100% !important;
+      }
+      </style>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      </head>
+      <body>
+        <div style="margin-left: 15px; margin-right: 15px;">
+      ''';
+  static String kHtmlPostFix = '''
+  </div>
+  </body>
+  </html>
+  ''';
 }

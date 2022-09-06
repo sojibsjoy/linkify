@@ -12,6 +12,14 @@ class ProductsService {
     return response;
   }
 
+  static Future<dynamic> getProductDetails({required int pID}) async {
+    var response = await BaseClient.getData(
+      api: ConstantStrings.kProductDetailsAPI,
+      parameter: {"id": pID, "languageId": 4},
+    );
+    return response;
+  }
+
   static Future<dynamic> getCartItems({required int customerId}) async {
     var parameterData = {
       "customerId": customerId,

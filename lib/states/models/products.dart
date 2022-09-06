@@ -22,6 +22,7 @@ class ProductModel {
     required this.metaKeyword,
     required this.metaDesceiption,
     required this.guidId,
+    required this.productMasterMediaViewModels,
     required this.productSubSkuRequestModels,
   });
   late final int productMasterId;
@@ -38,6 +39,7 @@ class ProductModel {
   late final String metaKeyword;
   late final String metaDesceiption;
   late final String guidId;
+  late final List<ProductMasterMediaViewModel> productMasterMediaViewModels;
   late final List<ProductSubSkuRequestModels> productSubSkuRequestModels;
 
   ProductModel.fromJson(Map<String, dynamic> json) {
@@ -55,6 +57,10 @@ class ProductModel {
     metaKeyword = json['metaKeyword'];
     metaDesceiption = json['metaDesceiption'];
     guidId = json['guidId'];
+    productMasterMediaViewModels =
+        List.from(json["productMasterMediaViewModels"])
+            .map((e) => ProductMasterMediaViewModel.fromJson(e))
+            .toList();
     productSubSkuRequestModels = List.from(json['productSubSkuRequestModels'])
         .map((e) => ProductSubSkuRequestModels.fromJson(e))
         .toList();
@@ -82,6 +88,22 @@ class ProductModel {
   }
 }
 
+class ProductMasterMediaViewModel {
+  ProductMasterMediaViewModel({
+    required this.fileLocation,
+  });
+  String fileLocation;
+
+  factory ProductMasterMediaViewModel.fromJson(Map<String, dynamic> json) =>
+      ProductMasterMediaViewModel(
+        fileLocation: json["fileLocation"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "fileLocation": fileLocation,
+      };
+}
+
 class ProductSubSkuRequestModels {
   ProductSubSkuRequestModels({
     required this.productSubSKUId,
@@ -92,9 +114,6 @@ class ProductSubSkuRequestModels {
     required this.quantity,
     required this.attributeCombination,
     required this.attributeSetId,
-    required this.largeImage,
-    required this.mediumImage,
-    required this.smallImage,
     required this.videoEmbade,
     required this.symbol,
   });
@@ -106,9 +125,6 @@ class ProductSubSkuRequestModels {
   late final double quantity;
   late final String attributeCombination;
   late final int attributeSetId;
-  late final String largeImage;
-  late final String mediumImage;
-  late final String smallImage;
   late final String videoEmbade;
   late final String symbol;
 
@@ -121,9 +137,6 @@ class ProductSubSkuRequestModels {
     quantity = json['quantity'];
     attributeCombination = json['attributeCombination'];
     attributeSetId = json['attributeSetId'];
-    largeImage = json['largeImage'];
-    mediumImage = json['mediumImage'];
-    smallImage = json['smallImage'];
     videoEmbade = json['videoEmbade'];
     symbol = json['symbol'];
   }
@@ -138,9 +151,6 @@ class ProductSubSkuRequestModels {
     data['quantity'] = quantity;
     data['attributeCombination'] = attributeCombination;
     data['attributeSetId'] = attributeSetId;
-    data['largeImage'] = largeImage;
-    data['mediumImage'] = mediumImage;
-    data['smallImage'] = smallImage;
     data['videoEmbade'] = videoEmbade;
     data['symbol'] = symbol;
     return data;

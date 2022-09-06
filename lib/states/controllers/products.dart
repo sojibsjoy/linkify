@@ -1,17 +1,20 @@
 import 'dart:convert';
 
 import 'package:dogventurehq/states/models/cart_item.dart';
+import 'package:dogventurehq/states/models/product_details.dart';
 import 'package:dogventurehq/states/models/products.dart';
 import 'package:dogventurehq/states/services/products.dart';
 import 'package:get/get.dart';
 
 class ProductsController extends GetxController {
   RxBool productsLoading = true.obs;
+  RxBool productDetailsLoading = true.obs;
   RxBool cartItemsLoading = true.obs;
   RxBool addToCartLoading = true.obs;
   RxBool removeItemFromCartLoading = true.obs;
 
   var productList = <ProductModel>[].obs;
+  ProductDetailsModel? pDetailsModel;
   var cartItemList = <CartItemModel>[].obs;
   CartItemModel? carRequestModel;
 
@@ -22,6 +25,24 @@ class ProductsController extends GetxController {
       productList.value = productsModelFromJson(jsonEncode(response));
     } finally {
       productsLoading(false);
+    }
+  }
+
+  void getProductDetails({required int productMasterID}) async {
+    productDetailsLoading(true);
+    try {
+      var response =
+          await ProductsService.getProductDetails(pID: productMasterID);
+      pDetailsModel = productDetailsModelFromJson(jsonEncode(response));
+    } finally {
+      productDetailsLoading(false);
+      if (pDetailsModel != null) {
+        getProducts(
+          pDetailsModel!.categoryRequestModels.isNotEmpty
+              ? pDetailsModel!.categoryRequestModels[0].categoryId
+              : 575,
+        );
+      }
     }
   }
 

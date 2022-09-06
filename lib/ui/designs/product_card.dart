@@ -37,6 +37,8 @@ class _ProductCardState extends State<ProductCard> {
           children: [
             // Product Image, Name, Price
             InkWell(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
               onTap: () => Get.toNamed(
                 ProductDetails.routeName,
                 arguments: widget.pModel,
@@ -54,7 +56,7 @@ class _ProductCardState extends State<ProductCard> {
                   children: [
                     CustomImg(
                       imgUrl: widget
-                          .pModel.productSubSkuRequestModels[0].largeImage,
+                          .pModel.productMasterMediaViewModels[0].fileLocation,
                       imgWidth: widget.imgWidth ?? 154.w,
                       imgHeight: widget.imgHeight ?? 154.h,
                       imgFit: BoxFit.fill,
@@ -64,14 +66,20 @@ class _ProductCardState extends State<ProductCard> {
                       width: widget.imgWidth,
                       height: 36.w,
                       padding: EdgeInsets.only(left: 5.w),
-                      child: BuildText(
-                        text: widget.pModel.productName,
-                        maximumLines: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          BuildText(
+                            text: widget.pModel.productName,
+                            maximumLines: 2,
+                          ),
+                        ],
                       ),
                     ),
-                    addH(5.h),
+                    // addH(5.h),
                     Padding(
-                      padding: EdgeInsets.only(left: 5.w),
+                      padding: EdgeInsets.only(left: 5.w, bottom: 5.h),
                       child: BuildText(
                         text:
                             'AED ${widget.pModel.productSubSkuRequestModels[0].price}',
