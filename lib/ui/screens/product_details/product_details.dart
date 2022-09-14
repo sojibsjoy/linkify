@@ -142,7 +142,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                               ),
                               // product image & gallery
                               ProductGallery(
-                                  pModel: _productsCon.pDetailsModel!),
+                                pModel: _productsCon.pDetailsModel!,
+                              ),
                               addH(30.h),
                               // prices
                               Row(

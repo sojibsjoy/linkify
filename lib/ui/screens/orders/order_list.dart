@@ -54,9 +54,16 @@ class OrderList extends StatelessWidget {
                           isBold: false,
                         ),
                         addH(5.h),
-                        const RowText(
-                          text1: 'ABC123456',
-                          text2: '22-06-2022',
+                        RowText(
+                          text1: orderList[index].refNumber,
+                          text2: orderList[index]
+                              .invoiceDate
+                              .add(const Duration(days: 5))
+                              .toString()
+                              .substring(0, 10)
+                              .split('-')
+                              .reversed
+                              .join('-'),
                           isBold: true,
                         )
                       ],

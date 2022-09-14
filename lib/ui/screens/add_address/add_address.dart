@@ -147,7 +147,8 @@ class _AddAddressState extends State<AddAddress> {
                           Future.delayed(
                             const Duration(milliseconds: 100),
                             () => _addressCon.getStates(
-                                countryID: item.countryId),
+                              countryID: item.countryId,
+                            ),
                           );
                           break;
                         }
